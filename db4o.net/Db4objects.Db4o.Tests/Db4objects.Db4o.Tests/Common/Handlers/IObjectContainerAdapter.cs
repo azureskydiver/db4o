@@ -19,5 +19,7 @@ namespace Db4objects.Db4o.Tests.Common.Handlers
 		IQuery Query();
 
 		IObjectContainerAdapter ForContainer(IExtObjectContainer db);
+
+		object ObjectContainer();
 	}
 }

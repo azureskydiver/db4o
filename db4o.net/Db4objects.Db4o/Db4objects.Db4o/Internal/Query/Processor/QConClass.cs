@@ -25,14 +25,25 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 		{
 		}
 
-		internal QConClass(Transaction a_trans, QCon a_parent, QField a_field, IReflectClass
-			 claxx) : base(a_trans, a_parent, a_field, null)
+		internal QConClass(Transaction trans, QCon parent, QField field, IReflectClass claxx
+			) : base(trans, parent, field, null)
 		{
 			// C/S
 			if (claxx != null)
 			{
-				_classMetadata = a_trans.Container().ProduceClassMetadata(claxx);
-				if (claxx.Equals(a_trans.Container()._handlers.IclassObject))
+				ObjectContainerBase container = trans.Container();
+				_classMetadata = container.ClassMetadataForReflectClass(claxx);
+				if (_classMetadata == null)
+				{
+					// could be an aliased class, try to resolve.
+					string className = claxx.GetName();
+					string aliasRunTimeName = container.Config().ResolveAliasStoredName(className);
+					if (!className.Equals(aliasRunTimeName))
+					{
+						_classMetadata = container.ClassMetadataForName(aliasRunTimeName);
+					}
+				}
+				if (claxx.Equals(container._handlers.IclassObject))
 				{
 					_classMetadata = (ClassMetadata)_classMetadata.TypeHandler();
 				}

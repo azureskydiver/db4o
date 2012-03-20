@@ -15,8 +15,7 @@ namespace Db4objects.Db4o.Diagnostic
 	/// Diagnostic listeners can be be added and removed with calls to this
 	/// interface. To install the most basic listener call:
 	/// <br/>
-	/// <code>commonConfig.Diagnostic.AddListener(new
-	/// DiagnosticToConsole());</code>
+	/// <code>commonConfig.Diagnostic.AddListener(new DiagnosticToConsole());</code>
 	/// </remarks>
 	/// <seealso cref="IConfiguration.Diagnostic">IConfiguration.Diagnostic
 	/// </seealso>

@@ -15,8 +15,7 @@ namespace Db4objects.Db4o.Config
 	/// By writing classes that implement this interface, it is possible to
 	/// define which constructor is to be used during the instantiation of a stored object.
 	/// <br/><br/>
-	/// Before starting a db4o session, translator classes that implement the
-	/// <code>ObjectConstructor</code> or
+	/// Before starting a db4o session, translator classes that implement the ObjectConstructor or
 	/// <see cref="IObjectTranslator">IObjectTranslator</see>
 	/// need to be registered.<br/><br/>
 	/// Example:<br/>

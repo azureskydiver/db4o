@@ -35,6 +35,11 @@ namespace Db4objects.Db4o.Tests.Common.Handlers
 		{
 		}
 
+		public virtual object ObjectContainer()
+		{
+			return db;
+		}
+
 		public abstract void Store(object arg1);
 
 		public abstract void Store(object arg1, int arg2);

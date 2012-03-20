@@ -27,15 +27,13 @@ namespace Db4objects.Db4o.Ext
 	{
 		/// <summary>called before an Object is activated.</summary>
 		/// <remarks>called before an Object is activated.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored in.</param>
 		/// <returns>false to prevent activation.</returns>
 		bool ObjectCanActivate(IObjectContainer container);
 
 		/// <summary>called before an Object is deactivated.</summary>
 		/// <remarks>called before an Object is deactivated.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored in.</param>
 		/// <returns>false to prevent deactivation.</returns>
 		bool ObjectCanDeactivate(IObjectContainer container);
 
@@ -45,35 +43,30 @@ namespace Db4objects.Db4o.Ext
 		/// <br /><br />In a client/server setup this callback method will be executed on
 		/// the server.
 		/// </remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored in.</param>
 		/// <returns>false to prevent the object from being deleted.</returns>
 		bool ObjectCanDelete(IObjectContainer container);
 
 		/// <summary>called before an Object is stored the first time.</summary>
 		/// <remarks>called before an Object is stored the first time.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> is about to be stored to.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer is about to be stored to.</param>
 		/// <returns>false to prevent the object from being stored.</returns>
 		bool ObjectCanNew(IObjectContainer container);
 
 		/// <summary>called before a persisted Object is updated.</summary>
 		/// <remarks>called before a persisted Object is updated.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored in.</param>
 		/// <returns>false to prevent the object from being updated.</returns>
 		bool ObjectCanUpdate(IObjectContainer container);
 
 		/// <summary>called upon activation of an object.</summary>
 		/// <remarks>called upon activation of an object.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored in.</param>
 		void ObjectOnActivate(IObjectContainer container);
 
 		/// <summary>called upon deactivation of an object.</summary>
 		/// <remarks>called upon deactivation of an object.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored in.</param>
 		void ObjectOnDeactivate(IObjectContainer container);
 
 		/// <summary>called after an object was deleted.</summary>
@@ -82,20 +75,17 @@ namespace Db4objects.Db4o.Ext
 		/// <br /><br />In a client/server setup this callback method will be executed on
 		/// the server.
 		/// </remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object was stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object was stored in.</param>
 		void ObjectOnDelete(IObjectContainer container);
 
 		/// <summary>called after a new object was stored.</summary>
 		/// <remarks>called after a new object was stored.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored to.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored to.</param>
 		void ObjectOnNew(IObjectContainer container);
 
 		/// <summary>called after an object was updated.</summary>
 		/// <remarks>called after an object was updated.</remarks>
-		/// <param name="container">the <code>ObjectContainer</code> the object is stored in.
-		/// 	</param>
+		/// <param name="container">the ObjectContainer the object is stored in.</param>
 		void ObjectOnUpdate(IObjectContainer container);
 	}
 }

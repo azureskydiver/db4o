@@ -5,10 +5,9 @@ using Db4objects.Db4o.Constraints;
 namespace Db4objects.Db4o.Constraints
 {
 	/// <summary>
-	/// db4o-specific exception.<br /><br />
-	/// This exception can be thrown by a
+	/// This exception is thrown when a
 	/// <see cref="UniqueFieldValueConstraint">UniqueFieldValueConstraint</see>
-	/// on commit.
+	/// is violated.<br /><br />
 	/// </summary>
 	/// <seealso cref="Db4objects.Db4o.Config.IObjectField.Indexed(bool)">Db4objects.Db4o.Config.IObjectField.Indexed(bool)
 	/// 	</seealso>

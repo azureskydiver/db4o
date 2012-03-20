@@ -5,7 +5,7 @@ using Db4objects.Db4o;
 namespace Db4objects.Db4o.Query
 {
 	/// <summary>
-	/// candidate for
+	/// Candidate for
 	/// <see cref="IEvaluation">IEvaluation</see>
 	/// callbacks.
 	/// <br /><br />
@@ -23,15 +23,13 @@ namespace Db4objects.Db4o.Query
 	/// <br /><br />
 	/// A
 	/// <see cref="ICandidate">ICandidate</see>
-	/// provides access to the persistent object it
-	/// represents and allows to specify, whether it is to be included in the
-	/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-	/// resultset.
+	/// provides access to the query candidate object. It
+	/// represents and allows to specify whether it is to be included in the query result
 	/// </summary>
 	public interface ICandidate
 	{
 		/// <summary>
-		/// returns the persistent object that is represented by this query
+		/// Returns the persistent object that is represented by this query
 		/// <see cref="ICandidate">ICandidate</see>
 		/// .
 		/// </summary>
@@ -39,20 +37,19 @@ namespace Db4objects.Db4o.Query
 		object GetObject();
 
 		/// <summary>
-		/// specify whether the Candidate is to be included in the
-		/// <see cref="Db4objects.Db4o.IObjectSet">Db4objects.Db4o.IObjectSet</see>
-		/// resultset.
+		/// Specify whether the Candidate is to be included in the result
+		/// <br /><br />
+		/// This method may be called multiple times.
+		/// </summary>
+		/// <remarks>
+		/// Specify whether the Candidate is to be included in the result
 		/// <br /><br />
 		/// This method may be called multiple times. The last call prevails.
-		/// </summary>
-		/// <param name="flag">inclusion.</param>
+		/// </remarks>
+		/// <param name="flag">true to include that object. False otherwise.</param>
 		void Include(bool flag);
 
-		/// <summary>
-		/// returns the
-		/// <see cref="Db4objects.Db4o.IObjectContainer">Db4objects.Db4o.IObjectContainer</see>
-		/// the Candidate object is stored in.
-		/// </summary>
+		/// <summary>Returns the object container the query is executed on</summary>
 		/// <returns>
 		/// the
 		/// <see cref="Db4objects.Db4o.IObjectContainer">Db4objects.Db4o.IObjectContainer</see>

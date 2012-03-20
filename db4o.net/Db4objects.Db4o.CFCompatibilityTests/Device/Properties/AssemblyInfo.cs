@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Db4objects.Db4o.CFCompatibilityTests.Device_2008")]
-[assembly: AssemblyDescription("Device 8.1.224.14430 (.NET)")]
+[assembly: AssemblyDescription("Device 8.1.243.14430 (.NET)")]
 [assembly: AssemblyConfiguration(".NET")]
 [assembly: AssemblyCompany("Versant Corp., Redwood City, CA, USA")]
 [assembly: AssemblyProduct("db4o - database for objects")]
-[assembly: AssemblyCopyright("Versant Corp. 2000 - 2011")]
+[assembly: AssemblyCopyright("Versant Corp. 2000 - 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("8.1.224.14430")]
+[assembly: AssemblyVersion("8.1.243.14430")]
 
 // Below attribute is to suppress FxCop warning "CA2232 : Microsoft.Usage : Add STAThreadAttribute to assembly"
 // as Device app does not support STA thread.

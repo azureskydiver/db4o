@@ -7,7 +7,7 @@ namespace Db4objects.Db4o.IO
 	/// <summary>Wrapper base class for all classes that wrap Storage.</summary>
 	/// <remarks>
 	/// Wrapper base class for all classes that wrap Storage.
-	/// Each class that adds functionality to a Storage must
+	/// Each class that adds functionality to a Storage can
 	/// extend this class.
 	/// </remarks>
 	/// <seealso cref="BinDecorator"></seealso>

@@ -64,17 +64,12 @@ namespace Db4objects.Db4o.Tests.Common.Fieldindex
 
 		protected virtual BTree FieldIndexBTree(Type clazz, string fieldName)
 		{
-			return GetYapClass(clazz).FieldMetadataForName(fieldName).GetIndex(null);
-		}
-
-		private ClassMetadata GetYapClass(Type clazz)
-		{
-			return ClassMetadataFor(clazz);
+			return ClassMetadataFor(clazz).FieldMetadataForName(fieldName).GetIndex(null);
 		}
 
 		protected virtual BTree ClassIndexBTree(Type clazz)
 		{
-			return ((BTreeClassIndexStrategy)GetYapClass(clazz).Index()).Btree();
+			return ((BTreeClassIndexStrategy)ClassMetadataFor(clazz).Index()).Btree();
 		}
 
 		private BTree ComplexItemIndex(string fieldName)
@@ -135,13 +130,13 @@ namespace Db4objects.Db4o.Tests.Common.Fieldindex
 		{
 			ExpectingVisitor visitor = ExpectingVisitor.CreateExpectingVisitor(expectedValues
 				);
-			treeInt.Traverse(new _IVisitor4_117(visitor));
+			treeInt.Traverse(new _IVisitor4_113(visitor));
 			visitor.AssertExpectations();
 		}
 
-		private sealed class _IVisitor4_117 : IVisitor4
+		private sealed class _IVisitor4_113 : IVisitor4
 		{
-			public _IVisitor4_117(ExpectingVisitor visitor)
+			public _IVisitor4_113(ExpectingVisitor visitor)
 			{
 				this.visitor = visitor;
 			}

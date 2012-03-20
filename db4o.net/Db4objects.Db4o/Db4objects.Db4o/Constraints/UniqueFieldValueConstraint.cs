@@ -15,8 +15,13 @@ namespace Db4objects.Db4o.Constraints
 {
 	/// <summary>Configures a field of a class to allow unique values only.</summary>
 	/// <remarks>
-	/// Configures a field of a class to allow unique values only. In C/S mode, this configuration
-	/// should be set on the server side only.
+	/// Configures a field of a class to allow unique values only.
+	/// In C/S mode, add this configuration-item to the server side only.
+	/// <b>You need to turn on indexing for the given field, otherwise the unique constrain won't work.</b>
+	/// Add this to your configuration with
+	/// <see cref="Db4objects.Db4o.Config.ICommonConfiguration.Add(Db4objects.Db4o.Config.IConfigurationItem)
+	/// 	">Db4objects.Db4o.Config.ICommonConfiguration.Add(Db4objects.Db4o.Config.IConfigurationItem)
+	/// 	</see>
 	/// </remarks>
 	public class UniqueFieldValueConstraint : IConfigurationItem
 	{
@@ -50,12 +55,12 @@ namespace Db4objects.Db4o.Constraints
 					);
 			}
 			EventRegistryFactory.ForObjectContainer(objectContainer).Committing += new System.EventHandler<Db4objects.Db4o.Events.CommitEventArgs>
-				(new _IEventListener4_47(this, objectContainer).OnEvent);
+				(new _IEventListener4_52(this, objectContainer).OnEvent);
 		}
 
-		private sealed class _IEventListener4_47
+		private sealed class _IEventListener4_52
 		{
-			public _IEventListener4_47(UniqueFieldValueConstraint _enclosing, IInternalObjectContainer
+			public _IEventListener4_52(UniqueFieldValueConstraint _enclosing, IInternalObjectContainer
 				 objectContainer)
 			{
 				this._enclosing = _enclosing;
@@ -70,8 +75,8 @@ namespace Db4objects.Db4o.Constraints
 				while (i.MoveNext())
 				{
 					IObjectInfo objectInfo = (IObjectInfo)i.Current;
-					if (this.ReflectClass() != this._enclosing.ReflectorFor(trans, objectInfo.GetObject
-						()))
+					if (!this.ReflectClass().IsAssignableFrom(this._enclosing.ReflectorFor(trans, objectInfo
+						.GetObject())))
 					{
 						continue;
 					}

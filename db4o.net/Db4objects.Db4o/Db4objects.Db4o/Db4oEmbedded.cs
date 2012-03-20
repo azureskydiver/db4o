@@ -11,16 +11,21 @@ namespace Db4objects.Db4o
 	/// <summary>Factory class to open db4o instances in embedded
 	/// mode.</summary>
 	/// <remarks> Factory class to open db4o instances in embedded mode.
+	/// <br/>
+	/// <br/>
+	/// Use Db4objects.Db4o.CS.Db4oClientServer in
+	/// Db4objects.Db4o.CS.dll for opening db4o servers and db4o
+	/// clients.
+	/// 
 	/// </remarks>
-	/// <seealso cref="Db4objects.Db4o.CS.Db4oClientServer"> Db4objects.Db4o.CS.Db4oClientServer in
-	/// Db4objects.Db4o.CS.dll for methods to open db4o servers and db4o
-	/// clients.</seealso>
+	/// <seealso cref="Db4objects.Db4o.CS.Db4oClientServer">Db4objects.Db4o.CS.Db4oClientServer</seealso>
 	/// <since>7.5</since>
 	public class Db4oEmbedded
 	{
 		/// <summary>
 		/// Creates a fresh
-		/// <see cref="Db4objects.Db4o.Config.IEmbeddedConfiguration">IEmbeddedConfiguration</see>
+		/// <see cref="Db4objects.Db4o.Config.IEmbeddedConfiguration">Db4objects.Db4o.Config.IEmbeddedConfiguration
+		/// 	</see>
 		/// instance.
 		/// </summary>
 		/// <returns>a fresh, independent configuration with all options set to their default values
@@ -42,12 +47,6 @@ namespace Db4objects.Db4o
 		/// against the same file will result in a
 		/// <see cref="Db4objects.Db4o.Ext.DatabaseFileLockedException"> DatabaseFileLockedException</see>
 		/// .
-		/// <br/>
-		/// <br/>
-		/// Database files can only be accessed for readwrite access from one
-		/// process at one time. All versions except for db4o mobile edition
-		/// use an internal mechanism to lock the database file for other
-		/// processes.
 		/// <br/>
 		/// <br/>
 		/// </summary>
@@ -98,7 +97,7 @@ namespace Db4objects.Db4o
 		}
 
 		/// <summary>
-		/// Same as calling
+		/// Same (from java) as calling
 		/// <see cref="OpenFile(Db4objects.Db4o.Config.IEmbeddedConfiguration, string)">OpenFile(Db4objects.Db4o.Config.IEmbeddedConfiguration, string)
 		/// 	</see>
 		/// with a fresh configuration (

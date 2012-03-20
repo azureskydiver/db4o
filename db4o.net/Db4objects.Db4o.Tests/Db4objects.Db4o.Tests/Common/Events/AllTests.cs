@@ -28,7 +28,7 @@ namespace Db4objects.Db4o.Tests.Common.Events
 		protected override Type[] ComposeWith()
 		{
 			return new Type[] { typeof(DeleteOnDeletingCallbackTestCase), typeof(OwnCommitCallbackFlaggedNetworkingTestSuite
-				) };
+				), typeof(QueryInCallBackCSCallback) };
 		}
 		#endif // !SILVERLIGHT
 	}

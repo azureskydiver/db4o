@@ -200,7 +200,7 @@ namespace Db4objects.Db4o.Config
 		/// database file immediately.<br/><br/> This method
 		/// has no effect on open ObjectContainers. It will only affect how
 		/// ObjectContainers are opened.<br/><br/>
-		/// The default setting is <code>true</code>.<br/><br/>
+		/// The default setting is true.<br/><br/>
 		/// 
 		/// </remarks>
 		bool LockDatabaseFile
@@ -264,7 +264,7 @@ namespace Db4objects.Db4o.Config
 		/// for deploying db4o database files on CD-ROM.<br /><br />
 		/// </remarks>
 		/// <value>
-		/// <code>true</code> for configuring readOnly mode for subsequent
+		/// true for configuring readOnly mode for subsequent
 		/// calls to
 		/// <see cref="Db4objects.Db4o.Db4oFactory.OpenFile(string)">Db4o.openFile()</see>
 		/// .
@@ -289,7 +289,7 @@ namespace Db4objects.Db4o.Config
 		/// Use this method with care as a last resort to get data out of a
 		/// corrupted database.
 		/// </remarks>
-		/// <value><code>true</code> to turn recover mode on.</value>
+		/// <value>true to turn recover mode on.</value>
 		bool RecoveryMode
 		{
 			set;

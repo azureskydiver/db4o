@@ -5,12 +5,13 @@ using Db4objects.Db4o.Query;
 
 namespace Db4objects.Db4o.Query
 {
-	/// <summary>handle to a node in a S.O.D.A.</summary>
+	/// <summary>Handle to a node in a S.O.D.A.</summary>
 	/// <remarks>
-	/// handle to a node in a S.O.D.A. query graph.
+	/// Handle to a node in a S.O.D.A. query graph.
+	/// <b>NOTE: Soda queries silently ignore invalid specified fields, constraints etc.</b>
 	/// <br/><br/>
-	/// A node in the query graph can represent multiple
-	/// classes, one class or an attribute of a class.<br/><br/>The graph
+	/// A node in the query graph can represent a
+	/// class or an attribute of a class.<br/><br/>The graph
 	/// is automatically extended with attributes of added constraints
 	/// (see
 	/// <see cref="Constrain(object)">Constrain(object)</see>
@@ -36,15 +37,16 @@ namespace Db4objects.Db4o.Query
 	/// objects of the class/classes that the node, it was called from,
 	/// represents.<br/><br/>
 	/// <b>Note:<br/>
-	/// <see cref="Predicate">Native queries</see>
-	/// are the recommended main query
+	/// <see cref="Db4objects.Db4o.IObjectContainer.Query(Predicate)">Db4objects.Db4o.IObjectContainer.Query(Predicate)
+	/// 	</see>
+	/// Native queries} are the recommended main query
 	/// interface of db4o.</b>
 	/// </remarks>
 	public interface IQuery
 	{
-		/// <summary>adds a constraint to this node.</summary>
+		/// <summary>Adds a constraint to this node.</summary>
 		/// <remarks>
-		/// adds a constraint to this node.
+		/// Adds a constraint to this node.
 		/// <br/><br/>
 		/// If the constraint contains attributes that are not yet
 		/// present in the query graph, the query graph is extended
@@ -56,27 +58,25 @@ namespace Db4objects.Db4o.Query
 		/// <see cref="System.Type{T}">System.Type&lt;T&gt;</see>
 		/// : confine the result to objects of one
 		/// class or to objects implementing an interface.</li>
-		/// <li> interface
+		/// <li>
 		/// <see cref="IEvaluation">IEvaluation</see>
-		/// : run
+		/// -instance: run
 		/// evaluation callbacks against all candidates.</li>
 		/// </ul>
 		/// </remarks>
 		/// <param name="constraint">the constraint to be added to this Query.</param>
 		/// <returns>
-		/// 
-		/// <see cref="IConstraint">IConstraint</see>
 		/// a new
 		/// <see cref="IConstraint">IConstraint</see>
 		/// for this
-		/// query node or <code>null</code> for objects implementing the
+		/// query node or null for objects implementing the
 		/// <see cref="IEvaluation">IEvaluation</see>
 		/// interface.
 		/// </returns>
 		IConstraint Constrain(object constraint);
 
 		/// <summary>
-		/// returns a
+		/// Returns a
 		/// <see cref="IConstraints">IConstraints</see>
 		/// object that holds an array of all constraints on this node.
 		/// </summary>
@@ -87,9 +87,9 @@ namespace Db4objects.Db4o.Query
 		/// </returns>
 		IConstraints Constraints();
 
-		/// <summary>returns a reference to a descendant node in the query graph.</summary>
+		/// <summary>Returns a reference to a descendant node in the query graph.</summary>
 		/// <remarks>
-		/// returns a reference to a descendant node in the query graph.
+		/// Returns a reference to a descendant node in the query graph.
 		/// <br/><br/>If the node does not exist, it will be created.
 		/// <br/><br/>
 		/// All classes represented in the query node are tested, whether
@@ -106,7 +106,7 @@ namespace Db4objects.Db4o.Query
 		IQuery Descend(string fieldName);
 
 		/// <summary>
-		/// executes the
+		/// Executes the
 		/// <see cref="IQuery">IQuery</see>
 		/// .
 		/// </summary>
@@ -119,9 +119,9 @@ namespace Db4objects.Db4o.Query
 		/// </returns>
 		IObjectSet Execute();
 
-		/// <summary>adds an ascending ordering criteria to this node of the query graph.</summary>
+		/// <summary>Adds an ascending ordering criteria to this node of the query graph.</summary>
 		/// <remarks>
-		/// adds an ascending ordering criteria to this node of the query graph.
+		/// Adds an ascending ordering criteria to this node of the query graph.
 		/// <p>
 		/// If multiple ordering criteria are applied, the chronological
 		/// order of method calls is relevant: criteria created by 'earlier' calls are
@@ -151,11 +151,11 @@ namespace Db4objects.Db4o.Query
 		IQuery OrderAscending();
 
 		/// <summary>
-		/// adds a descending order criteria to this node of
+		/// Adds a descending order criteria to this node of
 		/// the query graph.
 		/// </summary>
 		/// <remarks>
-		/// adds a descending order criteria to this node of
+		/// Adds a descending order criteria to this node of
 		/// the query graph.
 		/// <br/><br/>
 		/// For semantics of multiple calls setting ordering criteria, see

@@ -32,5 +32,10 @@ namespace Db4objects.Db4o.Internal.Marshall
 		public static readonly Db4objects.Db4o.Internal.Marshall.AspectVersionContextImpl
 			 CheckAlwaysEnabled = new Db4objects.Db4o.Internal.Marshall.AspectVersionContextImpl
 			(int.MaxValue - 1);
+
+		public static IAspectVersionContext ForSize(int count)
+		{
+			return new Db4objects.Db4o.Internal.Marshall.AspectVersionContextImpl(count);
+		}
 	}
 }

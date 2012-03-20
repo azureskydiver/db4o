@@ -11,13 +11,13 @@ namespace Db4objects.Db4o.Events
 	/// <code>
 	/// private static void OnCreated(object sender, ObjectInfoEventArgs args)
 	/// {
-	/// Object obj = args.Object;
-	/// if (obj is Pilot)
-	/// {
-	/// Console.WriteLine(obj.ToString());
+	///    Object obj = args.Object;
+	///    if (obj is Pilot)
+	///    {
+	///       Console.WriteLine(obj.ToString());
+	///    }
 	/// }
-	/// }
-	/// registry.Created+=new System.EventHandler&lt;ObjectInfoEventArgs&gt;(OnCreated);
+	/// registry.Created+=OnCreated;
 	/// </code>
 	/// <seealso cref="EventRegistryFactory">EventRegistryFactory</seealso>
 	/// </summary>

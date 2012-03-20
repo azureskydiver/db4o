@@ -42,9 +42,7 @@ namespace Db4objects.Db4o.Defragment
 	/// <br/>
 	/// <br/>
 	/// <code>
-	/// DefragmentConfig config=new
-	/// DefragmentConfig("sample.yap","sample.bap",new
-	/// BTreeIDMapping("sample.map"));
+	/// DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap",new BTreeIDMapping("sample.map"));
 	/// <br/>
 	/// config.ForceBackupDelete(true);
 	/// <br/>
