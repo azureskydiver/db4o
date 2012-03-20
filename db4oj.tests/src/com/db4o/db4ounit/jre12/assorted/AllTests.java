@@ -12,6 +12,7 @@ public class AllTests extends Db4oTestSuite {
 				GenericPrimitiveArrayTestCase.class,
 				StoreComparableFieldTestCase.class,
 				TranslatorStoredClassesTestCase.class,
+				MissingTranslatorTestCase.class,
 		};
 	}
 
