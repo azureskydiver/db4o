@@ -58,7 +58,8 @@ public class VodCobraSchemaManager {
 				userSchemaClass.newIndex(
 						clazz.getSimpleName() + "_" + field.getName(), 
 						new UserSchemaField[]{userSchemaField}, 
-						SchemaIndexType.BTREE_INDEX);
+						SchemaIndexType.BTREE_INDEX,
+						true);
 			}
 		}
 		
