@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.db4o.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.jdo.reflect.*;
 
 import drs.vod.example.model.*;
 import drs.vod.example.utils.*;
@@ -25,7 +26,7 @@ public class ReplicateAllBooksOrdersCustomersFromVodToDb4o {
 			new Db4oEmbeddedReplicationProvider(objectContainer);
 		
 		ReplicationSession replicationSession = 
-			Replication.begin(vodReplicationProvider, db4oReplicationProvider);
+			Replication.begin(vodReplicationProvider, db4oReplicationProvider, new JdoReflector(Thread.currentThread().getContextClassLoader()));
 		
 		ObjectSet<Book> books = vodReplicationProvider.getStoredObjects(Book.class);
 		for (Book book: books) {

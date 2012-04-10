@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.db4o.*;
 import com.db4o.drs.versant.*;
+import com.db4o.drs.versant.jdo.reflect.*;
 
 import drs.vod.example.utils.*;
 
@@ -22,7 +23,7 @@ public class ReplicateAllChangesInBothDirections {
 			new VodReplicationProvider(vodDatabase);
 		
 		ReplicationSession replicationSession = 
-			Replication.begin(db4oReplicationProvider, vodReplicationProvider);
+			Replication.begin(db4oReplicationProvider, vodReplicationProvider, new JdoReflector(Thread.currentThread().getContextClassLoader()));
 		
 		boolean changesFound = false;
 		
