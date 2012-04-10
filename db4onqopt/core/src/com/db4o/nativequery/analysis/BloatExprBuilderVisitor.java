@@ -231,6 +231,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			if(applyStringHandling(expr)) {
 				return;
 			}
+			else {
+				throw new EarlyExitException();
+			}
 		}
 		if(isCollectionClass(expr.method().declaringClass())) {
 			if(applyCollectionHandling(expr)) {

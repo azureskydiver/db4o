@@ -463,10 +463,6 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertComparison("sampleFieldStringContains",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.CONTAINS,false);
 	}
 	
-	public void testFieldStringToLowerCaseStartsWith() throws Exception {
-		assertInvalid("sampleFieldStringToLowerCaseStartsWith");
-	}
-
 	@decaf.Ignore(unlessCompatible=decaf.Platform.JDK15)
 	boolean sampleFieldStringContainsWrongWay(Data data) {
 		return STRING_CMPVAL.contains(data.name);
@@ -511,6 +507,18 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	boolean sampleFieldStringToLowerCaseStartsWith(Data data) throws Exception {
 		return data.getName().toLowerCase().startsWith(STRING_CMPVAL);
+	}
+
+	public void testFieldStringToLowerCaseStartsWith() throws Exception {
+		assertInvalid("sampleFieldStringToLowerCaseStartsWith");
+	}
+
+	boolean sampleFieldStringLength(Data data) throws Exception {
+		return data.getName().length() > 6;
+	}
+
+	public void testFieldStringLength() throws Exception {
+		assertInvalid("sampleFieldStringLength");
 	}
 
 	// primitive wrapper equality
