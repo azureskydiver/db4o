@@ -15,10 +15,10 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo, OptOutNetworkingCS {
 	
 	public static void main(String[] args) {
-		new MissingTranslatorTestCase().runSolo();
+		new MissingTranslatorTestCase().runAll();
 	}
 	
 	public static class ItemTypeHandler implements ReferenceTypeHandler {
@@ -116,8 +116,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 		Assert.expect(Db4oFatalException.class, new CodeBlock() {		
 			@Override
 			public void run() throws Throwable {
-				LocalObjectContainer loc = (LocalObjectContainer) db();
-				loc.classMetadataForName(Item.class.getName());
+				triggerTranslatorValidation();
 			}		
 		});
 		
@@ -135,8 +134,17 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 		
 		reopen();
 
-		LocalObjectContainer loc = (LocalObjectContainer) db();		
-		loc.classMetadataForName(Item.class.getName());
+		triggerTranslatorValidation();
+	}
+
+	private void triggerTranslatorValidation() {
+		if (isMultiSession()) {
+			ObjectContainerSession ocs = (ObjectContainerSession) db();
+			ocs.classMetadataForName(Item.class.getName());
+		} else {
+			LocalObjectContainer loc = (LocalObjectContainer) db();
+			loc.classMetadataForName(Item.class.getName());
+		}
 	}
 	
 	public void testMissingTranslatorDoesNotThrowsInRecoveryMode() throws Exception {
@@ -144,8 +152,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 		fixture().config().recoveryMode(true);
 		reopen();
 		
-		LocalObjectContainer loc = (LocalObjectContainer) db();
-		loc.classMetadataForName(Item.class.getName());
+		triggerTranslatorValidation();		
 		Assert.isGreater(0,  translator.callCount);
 		
 	}
@@ -153,8 +160,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 	public void testDbIsUsableAfterException() throws Exception {
 		boolean exceptionThrown = false;
 		try {
-			LocalObjectContainer loc = (LocalObjectContainer) db();
-			loc.classMetadataForName(Item.class.getName());
+			triggerTranslatorValidation();			
 		}
 		catch(Db4oFatalException ex) {
 			exceptionThrown = true;
@@ -178,10 +184,22 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 	}
 	
 	public void testConfiguringTranslatorForExistingClass() throws Exception {
+			
 		// get rid of translator config by deleting the database and starting fresh
 		db().close();
 		fixture().clean();
 		reopen();
+		
+		if (isEmbedded()) {
+			Assert.expect(Db4oFatalException.class, new CodeBlock() {
+				@Override
+				public void run() throws Throwable {
+					store(new Item(1));
+				}			
+			});
+			
+			return;
+		}
 		
 		store(new Item(1));
 		fixture().clean();
@@ -191,8 +209,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 		Assert.expect(Db4oFatalException.class, new CodeBlock() {
 			@Override
 			public void run() throws Throwable {
-				LocalObjectContainer loc = (LocalObjectContainer) db();
-				loc.classMetadataForName(Item.class.getName());
+				triggerTranslatorValidation();
 			}			
 		});
 	}

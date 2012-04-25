@@ -9,11 +9,18 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 
+import db4ounit.*;
+
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
 public class TranslatorStoredClassesTestCase extends Db4oTestWithTempFile {
 
+	
+	public static void main(String[] args) {
+		new ConsoleTestRunner(TranslatorStoredClassesTestCase.class).run();
+	}
+	
 	public static class DataRawChild implements Serializable {
 		public int _id;
 
@@ -52,20 +59,24 @@ public class TranslatorStoredClassesTestCase extends Db4oTestWithTempFile {
 	}
 
 	private void createFile(Class translated,Object data) {
-        ObjectContainer server = db(translated,new TSerializable());
+        ObjectContainer server = db(translated, new TSerializable());
         server.store(data);
         server.close();
 	}
 
 	private void check(Class translated) {
-		ObjectContainer db=db(translated,null);
+		ObjectContainer db=db(translated, null);
 		db.ext().storedClasses();
 		db.close();
 	}
 
-	private ObjectContainer db(Class translated,ObjectTranslator translator) {
+	private ObjectContainer db(Class translated, ObjectTranslator translator) {
 		EmbeddedConfiguration config = newConfiguration();
 		config.common().objectClass(translated).translate(translator);
+		if (translator == null) {
+			// Test expects translator validation to not thrown.
+			config.file().recoveryMode(true);
+		}
 		return Db4oEmbedded.openFile(config, tempFile());
 	}
 
