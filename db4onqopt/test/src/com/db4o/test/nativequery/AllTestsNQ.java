@@ -33,6 +33,7 @@ public class AllTestsNQ {
 						NQRegressionTestCase.class,
 						NQCatConsistencyTestCase.class,
 						NQUnoptimizableCollectionMethodTestCase.class,
+						NQPredicateFalseTestCase.class,
 					}
 		);
 		Iterable4 allTests=Iterators.concat(

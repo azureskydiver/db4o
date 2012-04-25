@@ -180,6 +180,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase implements OptOut
 		}
 	}
 
+	// COR-2292
 	public void _testUnconditionalUntypedFalse() throws Exception {
 		assertNQResult(new UnconditionalUntypedFalsePredicate());
 	}

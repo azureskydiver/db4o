@@ -68,6 +68,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (_expr == null && isSingleReturn() && _retval instanceof ConstValue) {
 			expression(asExpression(_retval));
 		}
+		// COR-2292
+		if(_expr == BoolConstExpression.FALSE) {
+			return null;
+		}
 		return (checkComparisons(_expr) ? _expr : null);
 	}
 
@@ -125,7 +129,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		if (!(retval instanceof ThreeWayComparison)) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		ThreeWayComparison cmp = (ThreeWayComparison) retval;
 		Expression expr = null;
@@ -167,7 +171,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private void exitStatement() {
 		if(_topLevelStmtCount > 1) {
 			if(_retval != IgnoredExpression.INSTANCE) {
-				throw new EarlyExitException();
+				earlyExit();
 			}
 		}
 		if(_retval == IgnoredExpression.INSTANCE) {
@@ -195,7 +199,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 		}
 		if (!(left instanceof FieldValue) || !(right instanceof ComparisonOperand)) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		FieldValue fieldExpr = (FieldValue) left;
 		ComparisonOperand valueExpr = (ComparisonOperand) right;
@@ -214,7 +218,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	public void visitCallExpr(CallExpr expr) {
 		boolean isStatic = (expr instanceof CallStaticExpr);
 		if (!isStatic && expr.method().name().equals("<init>")) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		if (!isStatic && expr.method().name().equals("equals")) {
 			CallMethodExpr call = (CallMethodExpr) expr;
@@ -232,7 +236,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				return;
 			}
 			else {
-				throw new EarlyExitException();
+				earlyExit();
 			}
 		}
 		if(isCollectionClass(expr.method().declaringClass())) {
@@ -252,7 +256,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		MemberRef methodRef = expr.method();
 		if (_methodStack.contains(methodRef) || _methodStack.size() > MAX_DEPTH) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		_methodStack.addLast(methodRef);
 		try {
@@ -264,10 +268,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 			ExpressionPart methodRetval = descendIntoMethodCall(expr, params);
 			if(methodRetval==null) {
-				throw new EarlyExitException();
+				earlyExit();
 			}
 			if(methodRetval != IgnoredExpression.INSTANCE && containsCandidateAsParam(params)) {
-				throw new EarlyExitException();
+				earlyExit();
 			}
 			
 			retval(methodRetval);
@@ -287,7 +291,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		MemberRef methodRef = expr.method();
 		FlowGraph flowGraph = _context.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
 		if (flowGraph == null) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		if (NQDebug.LOG) {
 			System.out
@@ -506,10 +510,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private boolean applyCollectionHandling(CallExpr expr) {
 		String methodName = expr.method().name();
 		if (methodName.equals("size")) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		if (methodName.equals("isEmpty")) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		return false;
 	}
@@ -522,11 +526,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Expr left = expr.receiver();
 		Expr right = expr.params()[0];
 		if (!isComparableExprOperand(left) || !isComparableExprOperand(right)) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		ExpressionPart leftObj = descend(left);
 		if (!(leftObj instanceof ComparisonOperand)) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		ComparisonOperand leftOp = (ComparisonOperand) leftObj;
 		ComparisonOperand rightOp = descend(right);
@@ -536,7 +540,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			rightOp = swap;
 		}
 		if (!isCandidateFieldValue(leftOp) || rightOp == null) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		expression(comparisonExpression((FieldValue) leftOp, rightOp, op));
 	}
@@ -587,7 +591,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	public void visitLocalExpr(LocalExpr expr) {
 		super.visitLocalExpr(expr);
 		if (expr.index() >= _locals.size()) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		retval(_locals.get(expr.index()));
 	}
@@ -646,12 +650,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	public void visitArithExpr(ArithExpr expr) {
 		ExpressionPart leftObj = descend(expr.left());
 		if (!(leftObj instanceof ComparisonOperand)) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		ComparisonOperand left = (ComparisonOperand) leftObj;
 		ExpressionPart rightObj = descend(expr.right());
 		if (!(rightObj instanceof ComparisonOperand)) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		ComparisonOperand right = (ComparisonOperand) rightObj;
 		boolean swapped = false;
@@ -684,7 +688,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				}
 				break;
 			default:
-				throw new EarlyExitException();
+				earlyExit();
 		}
 	}
 
@@ -693,7 +697,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		ComparisonOperand idxOp = descend(expr.index());
 		if (arrayOp == null || idxOp == null
 				|| arrayOp.root() == CandidateFieldRoot.INSTANCE) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		retval(new ArrayAccessValue(arrayOp, idxOp));
 	}
@@ -757,7 +761,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	
 	public void visitStoreExpr(StoreExpr expr) {
 		if(!(expr.target() instanceof StackExpr)) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		super.visitStoreExpr(expr);
 	}
@@ -768,7 +772,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private static ComparisonExpression comparisonExpression(FieldValue left, ComparisonOperand right, ComparisonOperator op, boolean lenient) {
 		if (!lenient && !isCandidateFieldValue(left) || right == null) {
-			throw new EarlyExitException();
+			earlyExit();
 		}
 		return new ComparisonExpression((FieldValue) left, right, op);
 	}
@@ -786,6 +790,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private <T extends ExpressionPart> T descend(Node node) {
 		node.visit(this);
 		return (T)purgeReturnValue();
+	}
+	
+	private static void earlyExit() {
+		throw new EarlyExitException();
 	}
 	
 	private static class EarlyExitException extends RuntimeException {
