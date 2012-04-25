@@ -162,7 +162,7 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 		}
 		
 		Assert.isTrue(exceptionThrown);
-		fixture().clean();
+		fixture().resetConfig();
 		configureTranslator(fixture().config());
 		reopen();
 		
