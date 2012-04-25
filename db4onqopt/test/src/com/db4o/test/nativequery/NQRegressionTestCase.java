@@ -172,6 +172,18 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase implements OptOut
 		assertNQResult(new UnconditionalDataTypedPredicate());
 	}
 
+	private static final class UnconditionalUntypedFalsePredicate extends ExpectingPredicate<Object> {
+		public int expected() { return 0; }
+
+		public boolean match(Object candidate) {
+			return false;
+		}
+	}
+
+	public void _testUnconditionalUntypedFalse() throws Exception {
+		assertNQResult(new UnconditionalUntypedFalsePredicate());
+	}
+
 	private static final class BoolFieldPredicate extends ExpectingPredicate<Data> {
 		public int expected() {
 			return 1;
