@@ -336,12 +336,6 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			}
 		}
 
-		internal override void RemoveChildrenJoins()
-		{
-			base.RemoveChildrenJoins();
-			_children = null;
-		}
-
 		internal override QCon ShareParent(object a_object, BooleanByRef removeExisting)
 		{
 			if (i_parent == null)
@@ -491,9 +485,6 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 					return this;
 				}
 				GetObjectID();
-				// TODO: this may not be correct for NOT
-				// It may be necessary to add an if(i_evaluator.identity())
-				RemoveChildrenJoins();
 				i_evaluator = i_evaluator.Add(new QEIdentity());
 				return this;
 			}

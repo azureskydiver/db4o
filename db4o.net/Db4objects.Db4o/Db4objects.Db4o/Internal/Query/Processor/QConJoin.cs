@@ -106,19 +106,6 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return string.Empty;
 		}
 
-		internal virtual bool RemoveForParent(QCon a_constraint)
-		{
-			if (i_and)
-			{
-				QCon other = GetOtherConstraint(a_constraint);
-				other.RemoveJoin(this);
-				// prevents circular call
-				other.Remove();
-				return true;
-			}
-			return false;
-		}
-
 		public override string ToString()
 		{
 			string str = "QConJoin " + (i_and ? "AND " : "OR");
