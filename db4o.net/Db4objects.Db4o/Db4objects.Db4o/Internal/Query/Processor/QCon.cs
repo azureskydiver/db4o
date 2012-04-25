@@ -34,8 +34,6 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 
 		protected Db4objects.Db4o.Internal.Query.Processor.QCon i_parent;
 
-		private bool i_removed = false;
-
 		[System.NonSerialized]
 		internal Db4objects.Db4o.Internal.Transaction i_trans;
 
@@ -59,7 +57,6 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			// pending OR evaluations
 			// ANDs and ORs on this constraint
 			// the parent of this constraint or null, if this is a root
-			// prevents circular calls on removal
 			// our transaction to get a stream object anywhere
 			// whether or not this constraint was used to get the initial set
 			// in the FieldIndexProcessor
@@ -115,7 +112,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			Db4objects.Db4o.Internal.Query.Processor.QCon qcon = this;
 			ClassMetadata yc = GetYapClass();
 			bool[] foundField = new bool[] { false };
-			ForEachChildField(a_field, new _IVisitor4_104(foundField, query));
+			ForEachChildField(a_field, new _IVisitor4_101(foundField, query));
 			if (foundField[0])
 			{
 				return true;
@@ -125,7 +122,7 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			{
 				int[] count = new int[] { 0 };
 				FieldMetadata[] yfs = new FieldMetadata[] { null };
-				i_trans.Container().ClassCollection().AttachQueryNode(a_field, new _IVisitor4_122
+				i_trans.Container().ClassCollection().AttachQueryNode(a_field, new _IVisitor4_119
 					(yfs, count));
 				if (count[0] == 0)
 				{
@@ -163,9 +160,9 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			return true;
 		}
 
-		private sealed class _IVisitor4_104 : IVisitor4
+		private sealed class _IVisitor4_101 : IVisitor4
 		{
-			public _IVisitor4_104(bool[] foundField, QQuery query)
+			public _IVisitor4_101(bool[] foundField, QQuery query)
 			{
 				this.foundField = foundField;
 				this.query = query;
@@ -182,9 +179,9 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			private readonly QQuery query;
 		}
 
-		private sealed class _IVisitor4_122 : IVisitor4
+		private sealed class _IVisitor4_119 : IVisitor4
 		{
-			public _IVisitor4_122(FieldMetadata[] yfs, int[] count)
+			public _IVisitor4_119(FieldMetadata[] yfs, int[] count)
 			{
 				this.yfs = yfs;
 				this.count = count;
@@ -698,49 +695,6 @@ namespace Db4objects.Db4o.Internal.Query.Processor
 			{
 				return Join(orWith, false);
 			}
-		}
-
-		internal virtual bool Remove()
-		{
-			if (!i_removed)
-			{
-				i_removed = true;
-				RemoveChildrenJoins();
-				return true;
-			}
-			return false;
-		}
-
-		internal virtual void RemoveChildrenJoins()
-		{
-			if (!HasJoins())
-			{
-				return;
-			}
-			Collection4 toBeRemoved = CollectJoinsToBeRemoved();
-			i_joins.RemoveAll(toBeRemoved);
-			CheckLastJoinRemoved();
-		}
-
-		private Collection4 CollectJoinsToBeRemoved()
-		{
-			Collection4 toBeRemoved = new Collection4();
-			IEnumerator joinIter = IterateJoins();
-			while (joinIter.MoveNext())
-			{
-				QConJoin join = (QConJoin)joinIter.Current;
-				if (join.RemoveForParent(this))
-				{
-					toBeRemoved.Add(join);
-				}
-			}
-			return toBeRemoved;
-		}
-
-		internal virtual void RemoveJoin(QConJoin a_join)
-		{
-			i_joins.Remove(a_join);
-			CheckLastJoinRemoved();
 		}
 
 		internal virtual void RemoveNot()
