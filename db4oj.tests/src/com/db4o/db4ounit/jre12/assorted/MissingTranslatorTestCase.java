@@ -77,9 +77,9 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 	protected void store() throws Exception {
 		configureTranslator(fixture().config());
 		fixture().config().generateUUIDs(ConfigScope.GLOBALLY);
-		reopen();
-		
+		reopen();		
 		store(new Item(42));
+		
 		fixture().resetConfig();
 		reopen();
 	}
@@ -138,13 +138,8 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 	}
 
 	private void triggerTranslatorValidation() {
-		if (isMultiSession()) {
-			ObjectContainerSession ocs = (ObjectContainerSession) db();
-			ocs.classMetadataForName(Item.class.getName());
-		} else {
-			LocalObjectContainer loc = (LocalObjectContainer) db();
-			loc.classMetadataForName(Item.class.getName());
-		}
+		InternalObjectContainer ocs = (InternalObjectContainer) db();
+		ocs.classMetadataForName(Item.class.getName());
 	}
 	
 	public void testMissingTranslatorDoesNotThrowsInRecoveryMode() throws Exception {
@@ -186,23 +181,12 @@ public class MissingTranslatorTestCase extends AbstractDb4oTestCase implements O
 	public void testConfiguringTranslatorForExistingClass() throws Exception {
 			
 		// get rid of translator config by deleting the database and starting fresh
-		db().close();
+		fixture().close();
 		fixture().clean();
 		reopen();
 		
-		if (isEmbedded()) {
-			Assert.expect(Db4oFatalException.class, new CodeBlock() {
-				@Override
-				public void run() throws Throwable {
-					store(new Item(1));
-				}			
-			});
-			
-			return;
-		}
-		
 		store(new Item(1));
-		fixture().clean();
+		fixture().resetConfig();
 		configureTranslator(fixture().config());
 		reopen();
 		
