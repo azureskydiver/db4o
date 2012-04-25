@@ -80,7 +80,9 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 
 	public void testFalse() throws Exception {
-		Assert.areEqual(BoolConstExpression.FALSE,expression("sampleFalse"));
+		// COR-2292
+		assertInvalid("sampleFalse");
+		//Assert.areEqual(BoolConstExpression.FALSE,expression("sampleFalse"));
 	}
 
 	// primitive identity
