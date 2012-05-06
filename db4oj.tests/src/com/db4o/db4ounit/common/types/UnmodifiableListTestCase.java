@@ -9,11 +9,12 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * @sharpen.remove
  */
-public class UnmodifiableListTestCase extends AbstractDb4oTestCase {
+public class UnmodifiableListTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
 	public static void main(String[] args) {
 		new UnmodifiableListTestCase().runAll();
