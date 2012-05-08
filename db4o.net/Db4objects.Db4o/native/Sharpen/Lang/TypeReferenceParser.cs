@@ -159,8 +159,8 @@ namespace Sharpen.Lang
 
 		public AssemblyName ParseAssemblyName()
 		{
-			Token simpleName = Expect(TokenKind.Id);
-			
+			Token simpleName = _lexer.SimpleName();
+
 			AssemblyName assemblyName = new AssemblyName();
 			assemblyName.Name = simpleName.Value;
 
@@ -254,6 +254,5 @@ namespace Sharpen.Lang
 				? _stack.Pop()
 				: _lexer.NextToken();
 		}
-
 	}
 }

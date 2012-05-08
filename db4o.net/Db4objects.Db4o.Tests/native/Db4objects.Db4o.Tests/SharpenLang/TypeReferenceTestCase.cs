@@ -146,6 +146,52 @@ namespace Db4objects.Db4o.Tests.SharpenLang
 			assemblyName.SetPublicKeyToken(ParsePublicKeyToken("969db8053d3322ac"));
 			Assert.AreEqual(assemblyName.FullName, typeReference.AssemblyName.FullName, "string.Assembly.FullName");
         }
+
+		public void TestNumberAssemblyQualifiedName()
+		{
+			string assemblyNameString = "4ofus, Version=1.2.3.4, Culture=neutral";
+			TypeReference typeReference =TypeReference.FromString("ForOfUs.Foo, " + assemblyNameString);
+
+			Assert.AreEqual("ForOfUs.Foo", typeReference.SimpleName);
+
+			AssemblyName assemblyName = new AssemblyName();
+			assemblyName.Name = "4ofus";
+			assemblyName.Version = new Version(1, 2, 3, 4);
+			assemblyName.CultureInfo = CultureInfo.InvariantCulture;
+			Assert.AreEqual(assemblyName.FullName, typeReference.AssemblyName.FullName, "string.Assembly.FullName");
+		}
+
+		public void TestWeirdAssemblyQualifiedName()
+		{
+			var weirdAssemblyNames = new[]
+			                         	{
+			                         		"4starting-with-number",
+			                         		"{starting-with-open-brace",
+			                         		"}starting-with-close-brace",
+			                         		"1starting-with-number",
+			                         		"`starting-with-apostrophe1",
+			                         		"´starting-with-apostrophe2",
+			                         		"'starting-with-single-quotation-mark",
+			                         		"^starting-with-caret",
+			                         		//"with-comma-in-the\\,middle", // Not supported yet
+			                         		//"\\,starting-with-comma", // Not supported yet
+			                         	};
+
+			foreach (var simpleName in weirdAssemblyNames)
+			{
+				string assemblyNameString = simpleName + ", Version=1.2.3.4, Culture=neutral";
+				TypeReference typeReference = TypeReference.FromString("Namespace.TypeName, " + assemblyNameString);
+
+				Assert.AreEqual("Namespace.TypeName", typeReference.SimpleName);
+
+				AssemblyName assemblyName = new AssemblyName();
+				assemblyName.Name = simpleName;
+				assemblyName.Version = new Version(1, 2, 3, 4);
+				assemblyName.CultureInfo = CultureInfo.InvariantCulture;
+				
+				Assert.AreEqual(assemblyName.FullName, typeReference.AssemblyName.FullName, simpleName);
+			}
+		}
     	
 		static byte[] ParsePublicKeyToken(string token)
 		{
@@ -153,7 +199,7 @@ namespace Db4objects.Db4o.Tests.SharpenLang
 			byte[] bytes = new byte[len];
 			for (int i = 0; i < len; ++i)
 			{
-				bytes[i] = byte.Parse(token.Substring(i * 2, 2), System.Globalization.NumberStyles.HexNumber);
+				bytes[i] = byte.Parse(token.Substring(i * 2, 2), NumberStyles.HexNumber);
 			}
 			return bytes;
 		}

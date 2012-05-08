@@ -15,7 +15,8 @@ namespace Sharpen.Lang
 		NestedQualifier,
 		LBrack,
 		RBrack,
-		PointerQualifier
+		PointerQualifier,
+		SimpleName
 	}
 
 	internal class Token
@@ -25,9 +26,8 @@ namespace Sharpen.Lang
 
 		public Token(TokenKind kind, string value)
 		{
-			this.Kind = kind;
-			this.Value = value;
-			//Console.WriteLine(this);
+			Kind = kind;
+			Value = value;
 		}
 
 		public override string ToString()
@@ -79,6 +79,7 @@ namespace Sharpen.Lang
 				case ' ':
 					Consume();
 					return NextToken();
+
 				default:
 					if (IsIdStart(ch)) return Id();
 					if (char.IsDigit(ch)) return NumberOrVersion();
@@ -86,6 +87,7 @@ namespace Sharpen.Lang
 			}
 			throw new Exception(string.Format("Unexpected char '{0}'", ch));
 		}
+
 
 		private static bool IsIdStart(char ch)
 		{
@@ -109,8 +111,7 @@ namespace Sharpen.Lang
 					&& '_' != ch
 					&& '<' != ch
 					&& '>' != ch
-					&& ':' != ch
-					&& ' ' != ch) // assembly names can contain spaces
+					&& ':' != ch)
 				{
 					break;
 				}
@@ -118,6 +119,33 @@ namespace Sharpen.Lang
 			}
 			while (!AtEOF);
 			return TokenFromBuffer(TokenKind.Id);
+		}
+
+		// Assembly name parsing based on:
+		// http://blogs.msdn.com/b/junfeng/archive/2004/09/14/229254.aspx
+		public Token SimpleName()
+		{
+			char ch = Peek();
+			while(!AtEOF && char.IsWhiteSpace(ch))
+			{
+				Consume();
+				ch = Peek();
+			}
+
+			//TODO: Correcly handle commas
+			while(!AtEOF)
+			{
+				ch = Peek();
+				if (!char.IsLetterOrDigit(ch)
+					&& (ch == ',' || ch == '/' || ch == '\\' || ch == ':' || ch == '*' || ch == '?' || ch == '"' || ch == '<' || ch == '>' || ch == '|' 
+					              || ch == '[' || ch == ']'))
+				{
+					break;
+				}
+				ConsumeAndBuffer(ch);
+
+			}
+			return TokenFromBuffer(TokenKind.SimpleName);
 		}
 
 		private Token NumberOrVersion()
