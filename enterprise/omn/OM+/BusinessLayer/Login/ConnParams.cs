@@ -12,6 +12,7 @@ namespace OManager.BusinessLayer.Login
         private readonly string m_userName;
         private readonly string m_passWord;
 		private bool m_readonly;
+
 	
 		
 
@@ -28,6 +29,12 @@ namespace OManager.BusinessLayer.Login
             m_passWord = password;
             m_port = port; 
 
+        }
+
+        public ConnParams(string connection)
+        {
+
+            m_connection = connection;
         }
 		public bool ConnectionReadOnly
 		{

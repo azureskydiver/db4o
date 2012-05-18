@@ -27,7 +27,7 @@ namespace OMControlLibrary
 					currRecentConnection = tempRc;
 				currRecentConnection.Timestamp = DateTime.Now;
 				currRecentConnection.ConnParam = conparam;
-				AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentConnection);
+				AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentConnection,false );
 				OMEInteraction.SetCurrentRecentConnection(currRecentConnection);
                 OMEInteraction.SaveRecentConnection(currRecentConnection);
 

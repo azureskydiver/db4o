@@ -53,8 +53,12 @@ namespace OMControlLibrary
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.toolTipForTextBox = new System.Windows.Forms.ToolTip(this.components);
+            this.btnBrowseCustomConfig = new System.Windows.Forms.Button();
+            this.btnClearCustomConfig = new System.Windows.Forms.Button();
             this.btnAddAssemblies = new System.Windows.Forms.Button();
             this.toolTipForAssembly = new System.Windows.Forms.ToolTip(this.components);
+            this.lblCustomConfig = new System.Windows.Forms.Label();
+            this.txtCustomConfigAssemblyPath = new System.Windows.Forms.TextBox();
             this.groupBoxToggle.SuspendLayout();
             this.panelLocal.SuspendLayout();
             this.panelRemote.SuspendLayout();
@@ -67,7 +71,7 @@ namespace OMControlLibrary
             this.buttonBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonBrowse.Image = global::OMControlLibrary.Properties.Resources.Browse;
             this.buttonBrowse.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.buttonBrowse.Location = new System.Drawing.Point(359, 3);
+            this.buttonBrowse.Location = new System.Drawing.Point(399, 3);
             this.buttonBrowse.Name = "buttonBrowse";
             this.buttonBrowse.Size = new System.Drawing.Size(22, 22);
             this.buttonBrowse.TabIndex = 7;
@@ -87,7 +91,7 @@ namespace OMControlLibrary
             // buttonConnect
             // 
             this.buttonConnect.Font = new System.Drawing.Font("Tahoma", 8F);
-            this.buttonConnect.Location = new System.Drawing.Point(253, 144);
+            this.buttonConnect.Location = new System.Drawing.Point(293, 183);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(75, 23);
             this.buttonConnect.TabIndex = 9;
@@ -108,7 +112,7 @@ namespace OMControlLibrary
             // labelPassword
             // 
             this.labelPassword.AutoSize = true;
-            this.labelPassword.Location = new System.Drawing.Point(221, 34);
+            this.labelPassword.Location = new System.Drawing.Point(220, 34);
             this.labelPassword.Name = "labelPassword";
             this.labelPassword.Size = new System.Drawing.Size(53, 13);
             this.labelPassword.TabIndex = 6;
@@ -117,7 +121,7 @@ namespace OMControlLibrary
             // labelPort
             // 
             this.labelPort.AutoSize = true;
-            this.labelPort.Location = new System.Drawing.Point(221, 7);
+            this.labelPort.Location = new System.Drawing.Point(220, 7);
             this.labelPort.Name = "labelPort";
             this.labelPort.Size = new System.Drawing.Size(27, 13);
             this.labelPort.TabIndex = 5;
@@ -136,10 +140,10 @@ namespace OMControlLibrary
             // 
             this.textBoxPort.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxPort.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBoxPort.Location = new System.Drawing.Point(279, 3);
+            this.textBoxPort.Location = new System.Drawing.Point(277, 3);
             this.textBoxPort.MaxLength = 5;
             this.textBoxPort.Name = "textBoxPort";
-            this.textBoxPort.Size = new System.Drawing.Size(100, 13);
+            this.textBoxPort.Size = new System.Drawing.Size(128, 13);
             this.textBoxPort.TabIndex = 4;
             this.textBoxPort.TextChanged += new System.EventHandler(this.textBoxPort_TextChanged);
             this.textBoxPort.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPort_KeyDown);
@@ -151,7 +155,7 @@ namespace OMControlLibrary
             this.textBoxPassword.Location = new System.Drawing.Point(279, 30);
             this.textBoxPassword.MaxLength = 8;
             this.textBoxPassword.Name = "textBoxPassword";
-            this.textBoxPassword.Size = new System.Drawing.Size(100, 13);
+            this.textBoxPassword.Size = new System.Drawing.Size(126, 13);
             this.textBoxPassword.TabIndex = 6;
             this.textBoxPassword.UseSystemPasswordChar = true;
             // 
@@ -185,7 +189,7 @@ namespace OMControlLibrary
             this.groupBoxToggle.Font = new System.Drawing.Font("Tahoma", 8F);
             this.groupBoxToggle.Location = new System.Drawing.Point(8, 2);
             this.groupBoxToggle.Name = "groupBoxToggle";
-            this.groupBoxToggle.Size = new System.Drawing.Size(408, 133);
+            this.groupBoxToggle.Size = new System.Drawing.Size(441, 133);
             this.groupBoxToggle.TabIndex = 1;
             this.groupBoxToggle.TabStop = false;
             this.groupBoxToggle.Text = "Connection";
@@ -197,7 +201,7 @@ namespace OMControlLibrary
             this.comboBoxFilePath.FormattingEnabled = true;
             this.comboBoxFilePath.Location = new System.Drawing.Point(119, 42);
             this.comboBoxFilePath.Name = "comboBoxFilePath";
-            this.comboBoxFilePath.Size = new System.Drawing.Size(268, 21);
+            this.comboBoxFilePath.Size = new System.Drawing.Size(304, 21);
             this.comboBoxFilePath.TabIndex = 2;
             this.comboBoxFilePath.DropdownItemSelected += new ToolTipComboBox.DropdownItemSelectedEventHandler(this.comboBoxFilePath_DropdownItemSelected);
             this.comboBoxFilePath.SelectedIndexChanged += new System.EventHandler(this.comboBoxFilePath_SelectedIndexChanged);
@@ -241,9 +245,9 @@ namespace OMControlLibrary
             this.panelLocal.Controls.Add(this.textBoxConnection);
             this.panelLocal.Controls.Add(this.buttonBrowse);
             this.panelLocal.Controls.Add(this.labelNewConnection);
-            this.panelLocal.Location = new System.Drawing.Point(6, 75);
+            this.panelLocal.Location = new System.Drawing.Point(6, 69);
             this.panelLocal.Name = "panelLocal";
-            this.panelLocal.Size = new System.Drawing.Size(396, 52);
+            this.panelLocal.Size = new System.Drawing.Size(423, 52);
             this.panelLocal.TabIndex = 12;
             this.panelLocal.Visible = false;
             // 
@@ -260,10 +264,10 @@ namespace OMControlLibrary
             // textBoxConnection
             // 
             this.textBoxConnection.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxConnection.Location = new System.Drawing.Point(113, 8);
+            this.textBoxConnection.Location = new System.Drawing.Point(114, 8);
             this.textBoxConnection.MaxLength = 64;
             this.textBoxConnection.Name = "textBoxConnection";
-            this.textBoxConnection.Size = new System.Drawing.Size(244, 13);
+            this.textBoxConnection.Size = new System.Drawing.Size(279, 13);
             this.textBoxConnection.TabIndex = 8;
             // 
             // labelNewConnection
@@ -287,13 +291,13 @@ namespace OMControlLibrary
             this.panelRemote.Controls.Add(this.textBoxPort);
             this.panelRemote.Location = new System.Drawing.Point(8, 68);
             this.panelRemote.Name = "panelRemote";
-            this.panelRemote.Size = new System.Drawing.Size(391, 53);
+            this.panelRemote.Size = new System.Drawing.Size(415, 53);
             this.panelRemote.TabIndex = 12;
             // 
             // buttonCancel
             // 
             this.buttonCancel.Font = new System.Drawing.Font("Tahoma", 8F);
-            this.buttonCancel.Location = new System.Drawing.Point(332, 144);
+            this.buttonCancel.Location = new System.Drawing.Point(374, 182);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
@@ -308,9 +312,39 @@ namespace OMControlLibrary
             this.toolTipForTextBox.ReshowDelay = 0;
             this.toolTipForTextBox.ShowAlways = true;
             // 
+            // btnBrowseCustomConfig
+            // 
+            this.btnBrowseCustomConfig.AutoSize = true;
+            this.btnBrowseCustomConfig.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnBrowseCustomConfig.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnBrowseCustomConfig.Image = global::OMControlLibrary.Properties.Resources.Browse;
+            this.btnBrowseCustomConfig.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnBrowseCustomConfig.Location = new System.Drawing.Point(399, 147);
+            this.btnBrowseCustomConfig.Name = "btnBrowseCustomConfig";
+            this.btnBrowseCustomConfig.Size = new System.Drawing.Size(22, 22);
+            this.btnBrowseCustomConfig.TabIndex = 10;
+            this.toolTipForTextBox.SetToolTip(this.btnBrowseCustomConfig, "Browse");
+            this.btnBrowseCustomConfig.UseVisualStyleBackColor = true;
+            this.btnBrowseCustomConfig.Click += new System.EventHandler(this.btnBrowseCustomConfig_Click);
+            // 
+            // btnClearCustomConfig
+            // 
+            this.btnClearCustomConfig.AutoSize = true;
+            this.btnClearCustomConfig.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnClearCustomConfig.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnClearCustomConfig.Image = global::OMControlLibrary.Properties.Resources.close;
+            this.btnClearCustomConfig.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnClearCustomConfig.Location = new System.Drawing.Point(427, 147);
+            this.btnClearCustomConfig.Name = "btnClearCustomConfig";
+            this.btnClearCustomConfig.Size = new System.Drawing.Size(22, 22);
+            this.btnClearCustomConfig.TabIndex = 14;
+            this.toolTipForTextBox.SetToolTip(this.btnClearCustomConfig, "Browse");
+            this.btnClearCustomConfig.UseVisualStyleBackColor = true;
+            this.btnClearCustomConfig.Click += new System.EventHandler(this.btnClearCustomConfig_Click);
+            // 
             // btnAddAssemblies
             // 
-            this.btnAddAssemblies.Location = new System.Drawing.Point(154, 145);
+            this.btnAddAssemblies.Location = new System.Drawing.Point(194, 183);
             this.btnAddAssemblies.Name = "btnAddAssemblies";
             this.btnAddAssemblies.Size = new System.Drawing.Size(93, 23);
             this.btnAddAssemblies.TabIndex = 11;
@@ -325,17 +359,39 @@ namespace OMControlLibrary
             this.toolTipForAssembly.ReshowDelay = 0;
             this.toolTipForAssembly.ShowAlways = true;
             // 
+            // lblCustomConfig
+            // 
+            this.lblCustomConfig.AutoSize = true;
+            this.lblCustomConfig.Location = new System.Drawing.Point(13, 147);
+            this.lblCustomConfig.Name = "lblCustomConfig";
+            this.lblCustomConfig.Size = new System.Drawing.Size(147, 13);
+            this.lblCustomConfig.TabIndex = 13;
+            this.lblCustomConfig.Text = "Custom Config Assembly Path";
+            // 
+            // txtCustomConfigAssemblyPath
+            // 
+            this.txtCustomConfigAssemblyPath.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCustomConfigAssemblyPath.Location = new System.Drawing.Point(166, 147);
+            this.txtCustomConfigAssemblyPath.MaxLength = 64;
+            this.txtCustomConfigAssemblyPath.Name = "txtCustomConfigAssemblyPath";
+            this.txtCustomConfigAssemblyPath.Size = new System.Drawing.Size(227, 13);
+            this.txtCustomConfigAssemblyPath.TabIndex = 10;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.btnClearCustomConfig);
+            this.Controls.Add(this.txtCustomConfigAssemblyPath);
+            this.Controls.Add(this.btnBrowseCustomConfig);
+            this.Controls.Add(this.lblCustomConfig);
             this.Controls.Add(this.btnAddAssemblies);
             this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxToggle);
             this.Name = "Login";
-            this.Size = new System.Drawing.Size(427, 171);
+            this.Size = new System.Drawing.Size(484, 218);
             this.Load += new System.EventHandler(this.Login_Load);
             this.groupBoxToggle.ResumeLayout(false);
             this.groupBoxToggle.PerformLayout();
@@ -344,6 +400,7 @@ namespace OMControlLibrary
             this.panelRemote.ResumeLayout(false);
             this.panelRemote.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 
@@ -375,6 +432,10 @@ namespace OMControlLibrary
 		private System.Windows.Forms.CheckBox chkReadOnly;
         private System.Windows.Forms.Button btnAddAssemblies;
         private System.Windows.Forms.ToolTip toolTipForAssembly;
+        private System.Windows.Forms.Label lblCustomConfig;
+        private System.Windows.Forms.Button btnBrowseCustomConfig;
+        private System.Windows.Forms.TextBox txtCustomConfigAssemblyPath;
+        private System.Windows.Forms.Button btnClearCustomConfig;
         //private ToolTipComboBox comboAssemblies;
 	}
 }

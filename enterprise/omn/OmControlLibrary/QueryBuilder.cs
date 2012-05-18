@@ -423,16 +423,18 @@ namespace OMControlLibrary
 				EnableDisableDatabaseConnection(true);
 
 				isrunning = false;
-				if (bw != null)
-				{
-					bw.CancelAsync();
-					bw.Dispose();
-					bw = null;
-				}
-				ApplicationObject.StatusBar.Clear();
-				ApplicationObject.StatusBar.Progress(false, "Query run successfully!", 0, 0);
-				ApplicationObject.StatusBar.Text = "Query run successfully!";
-				ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
+               
+               if (bw != null)
+                    {
+                        bw.CancelAsync();
+                        bw.Dispose();
+                        bw = null;
+                    }
+                    ApplicationObject.StatusBar.Clear();
+                    ApplicationObject.StatusBar.Progress(false, "Query run successfully!", 0, 0);
+                    ApplicationObject.StatusBar.Text = "Query run successfully!";
+                    ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
+                
 			}
 			catch (Exception oEx)
 			{
@@ -1566,6 +1568,7 @@ namespace OMControlLibrary
 
 		#endregion
 
+        
 		
 	}
 }

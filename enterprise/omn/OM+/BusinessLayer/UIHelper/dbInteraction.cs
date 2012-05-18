@@ -20,10 +20,10 @@ namespace OManager.BusinessLayer.UIHelper
 {
 	public class dbInteraction
 	{
-        public static void SetIndexedConfiguration(ArrayList fieldname, string className, ArrayList isIndexed, string dbPath)
+        public static void SetIndexedConfiguration(ArrayList fieldname, string className, ArrayList isIndexed, string dbPath,bool customConfig)
 		{
 			ClassDetails classDetails = new ClassDetails(className);
-			classDetails.SetIndex(fieldname, className, isIndexed, dbPath);
+			classDetails.SetIndex(fieldname, className, isIndexed, dbPath, customConfig );
 		}
 
         public static IType GetFieldType(string declaringClassName, string name)
@@ -205,10 +205,10 @@ namespace OManager.BusinessLayer.UIHelper
 		
 
 
-		public static string ConnectoToDB(RecentQueries recConnection)
+		public static string ConnectoToDB(RecentQueries recConnection, bool customConfig)
 		{
 			DBConnect db = new DBConnect();
-			return db.dbConnection(recConnection.ConnParam);                        
+			return db.dbConnection(recConnection.ConnParam, customConfig );                     
 
 		}
 	

@@ -10,6 +10,6 @@ namespace OMAddinDataTransferLayer.DataBaseDetails
 	{
 		ClassProperties GetClassProperties(string className);
 		int GetObjectCountForAClass(string classname);
-		void SetIndexedConfiguration(ArrayList fieldname, string className, ArrayList isIndexed, string dbPath);
+		void SetIndexedConfiguration(ArrayList fieldname, string className, ArrayList isIndexed, string dbPath, bool customConfig);
 	}
 }

@@ -14,8 +14,9 @@ namespace OMControlLibrary
 		ArrayList fieldnames;
 		string classname;
 		ArrayList indexed;
+        private bool CustomConfig { get; set; }
 
-		public string Classname
+	    public string Classname
 		{
 			get { return classname; }
 			set { classname = value; }
@@ -41,7 +42,7 @@ namespace OMControlLibrary
 
 		internal void SaveIndex(string path)
 		{
-			dbInteraction.SetIndexedConfiguration(fieldnames, classname, indexed, path);
+			dbInteraction.SetIndexedConfiguration(fieldnames, classname, indexed, path,CustomConfig);
 
 
 		}

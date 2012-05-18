@@ -1,21 +1,20 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OManager.BusinessLayer.Login;
 using Db4objects.Db4o;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
+
 
 namespace OManager.DataLayer.Connection
 {
     class DBConnect
     {
         IObjectContainer dbConn;
-        public string dbConnection(ConnParams login)
+        public string dbConnection(ConnParams login, bool customConfig)
         {
             try
             {
                 Db4oClient.conn = login;
+                Db4oClient.CustomConfig = customConfig;
                 dbConn = Db4oClient.Client;
                 return Db4oClient.exceptionConnection;
             }

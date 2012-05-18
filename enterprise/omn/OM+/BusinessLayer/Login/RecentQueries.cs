@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using OManager.BusinessLayer.QueryManager;
 using OManager.DataLayer.Connection;
-
 using OME.Logging.Common;
-using OME.Logging.Tracing;
+
 
 namespace OManager.BusinessLayer.Login
 {
@@ -19,26 +18,30 @@ namespace OManager.BusinessLayer.Login
 	[Serializable ]
     public class RecentQueries 
     {
-        #region Declaration
+       
         DateTime m_timestamp;
         ConnParams m_connParam;
         List<OMQuery> m_queryList;
         private long m_TimeOfCreation;
+	    private string m_customConfigAssemblyPath;
+
+        public string CustomConfigAssemblyPath
+        {
+            get { return m_customConfigAssemblyPath; }
+            set { m_customConfigAssemblyPath = value; }
+        }
+
         public long TimeOfCreation
         {
             get { return m_TimeOfCreation; }
             set { m_TimeOfCreation = value; }
         }
-        #endregion
-
-
-
         public RecentQueries(ConnParams connParam)
         {
             m_queryList = new List<OMQuery>();
             m_connParam = connParam;
         }
-
+        
         public List<OMQuery> QueryList
         {
             get { return m_queryList; }
@@ -57,7 +60,26 @@ namespace OManager.BusinessLayer.Login
             set { m_timestamp = value; }
         }
 
-        public void AddQueryToList(OMQuery query)
+        public void RemoveCustomConfigPath(string path)
+        {
+            IObjectContainer container = Db4oClient.OMNConnection;
+            IQuery query = container.Query();
+            query.Constrain(typeof (RecentQueries));
+            query.Descend("m_connParam").Descend("m_connection").Constrain(ConnParam.Connection );
+            query.Descend("m_customConfigAssemblyPath").Constrain(path);
+            IObjectSet objSet = query.Execute();
+            if (objSet.Count > 0)
+            {
+                RecentQueries q = objSet[0] as RecentQueries;
+                q.CustomConfigAssemblyPath = string.Empty;
+                container.Ext().Store(q, 2);
+                container.Commit();
+            }
+          
+            Db4oClient.CloseRecentConnectionFile();
+        }
+
+	    public void AddQueryToList(OMQuery query)
         {
 			try
 			{

@@ -1,5 +1,7 @@
 using System;
 using System.Configuration;
+using System.Linq;
+using System.Reflection;
 using Db4objects.Db4o;
 using Db4objects.Db4o.CS;
 using Db4objects.Db4o.CS.Config;
@@ -17,50 +19,23 @@ namespace OManager.DataLayer.Connection
 {
 	public class Db4oClient
 	{
-		private static TypeResolver typeResolver;
-		private static IObjectContainer objContainer;
+	    private static IObjectContainer objContainer;
 		private static IObjectContainer userConfigDatabase;
 		public static ConnParams conn;
 		public static string omnConnection;
 		public static string exceptionConnection = "";
 		public static bool boolExceptionForRecentConn;
-		private static bool isConnected;
-		private static IEmbeddedConfiguration embeddedConfig;
-		public static TypeResolver TypeResolver
-		{
-			get
-			{
-				return typeResolver;
-			}
-		}
+	    private static IEmbeddedConfiguration embeddedConfig;
 
-		private static RecentQueries currentRecentConnection;
-		public static RecentQueries CurrentRecentConnection
-		{
-			get
-			{
-				return currentRecentConnection;
-			}
-			set
-			{
-				currentRecentConnection = value;
-			}
-		}
-       
-		public static bool IsConnected
-		{
-			get
-			{
-				return isConnected ;
+	    public static TypeResolver TypeResolver { get; private set; }
 
+	    public static RecentQueries CurrentRecentConnection { get; set; }
 
-			}
-			set
-			{
-				isConnected=value  ;
-			}
-		}
-        public static bool IsClient
+	    public static bool CustomConfig { get; set; }
+
+	    public static bool IsConnected { get; set; }
+
+	    public static bool IsClient
         {
             get { return ((IInternalObjectContainer) objContainer).IsClient; }
            
@@ -98,8 +73,8 @@ namespace OManager.DataLayer.Connection
 							}
 							if (objContainer != null)
 							{
-								typeResolver = new TypeResolver(objContainer.Ext().Reflector());
-								isConnected = true;
+								TypeResolver = new TypeResolver(objContainer.Ext().Reflector());
+								IsConnected = true;
 							}
 						}
 					}
@@ -142,8 +117,10 @@ namespace OManager.DataLayer.Connection
 
 		private static IObjectContainer ConnectEmbedded()
 		{
-			if (embeddedConfig == null)
-				embeddedConfig = Db4oEmbedded.NewConfiguration();
+			if(CustomConfig )
+		    embeddedConfig = ManageCustomConfig.ConfigureEmbeddedCustomConfig();
+            if (embeddedConfig == null)
+                embeddedConfig = Db4oEmbedded.NewConfiguration();
 			ConfigureCommon(embeddedConfig.Common);
 			embeddedConfig.File.ReadOnly = conn.ConnectionReadOnly;
 			return Db4oEmbedded.OpenFile(embeddedConfig, conn.Connection);
@@ -151,14 +128,19 @@ namespace OManager.DataLayer.Connection
 
 		private static IObjectContainer  ConnectClient()
 		{
-			IClientConfiguration config = Db4oClientServer.NewClientConfiguration();
+		    IClientConfiguration config = null;
+            if (CustomConfig)
+            {
+                 config = ManageCustomConfig.ConfigureClientCustomConfig();
+            }
+		    if ( config == null)
+                config = Db4oClientServer.NewClientConfiguration();
 			ConfigureCommon(config.Common);
 			return  Db4oClientServer.OpenClient(config, conn.Host, conn.Port, conn.UserName, conn.PassWord) ;
 			
 		}
-		
-
-		protected static void ConfigureCommon(ICommonConfiguration config)
+      
+	    protected static void ConfigureCommon(ICommonConfiguration config)
 		{
 			config.Queries.EvaluationMode(QueryEvaluationMode.Lazy);
 			config.ActivationDepth = 1;
@@ -204,7 +186,7 @@ namespace OManager.DataLayer.Connection
 				{
 					objContainer.Close();
 					objContainer = null;
-					isConnected = false;
+					IsConnected = false;
 					conn = null;
 				}
 				embeddedConfig = null;

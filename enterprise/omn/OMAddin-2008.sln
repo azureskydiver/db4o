@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMNPostInstaller-2008", "In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMAddinDataTransferLayer-2008", "OMAddinDataTransferLayer\OMAddinDataTransferLayer-2008.csproj", "{FAD4092B-6902-48D4-ADC5-673D4C799AEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMCustomConfigurationforUser-2008", "OMCustomConfig\OMCustomConfigurationforUser-2008.csproj", "{EFFB9209-203B-492E-9DE2-83E0C5026226}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMCustomConfigImplementation-2008", "OMCustomConfigImplementation\OMCustomConfigImplementation-2008.csproj", "{7C5784D8-39A6-4174-8596-248BC16D189B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,14 @@ Global
 		{FAD4092B-6902-48D4-ADC5-673D4C799AEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAD4092B-6902-48D4-ADC5-673D4C799AEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAD4092B-6902-48D4-ADC5-673D4C799AEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFFB9209-203B-492E-9DE2-83E0C5026226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFFB9209-203B-492E-9DE2-83E0C5026226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFFB9209-203B-492E-9DE2-83E0C5026226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFFB9209-203B-492E-9DE2-83E0C5026226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C5784D8-39A6-4174-8596-248BC16D189B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C5784D8-39A6-4174-8596-248BC16D189B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C5784D8-39A6-4174-8596-248BC16D189B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C5784D8-39A6-4174-8596-248BC16D189B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

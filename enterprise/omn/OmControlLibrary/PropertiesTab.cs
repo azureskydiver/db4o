@@ -9,6 +9,9 @@ using OMAddinDataTransferLayer;
 using OMAddinDataTransferLayer.Connection;
 using OMAddinDataTransferLayer.DataBaseDetails;
 using OMAddinDataTransferLayer.TypeMauplation;
+using OMControlLibrary.OMEAppDomain;
+using OMCustomConfigImplementation;
+using OManager.BusinessLayer.Config;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.UIHelper;
@@ -166,7 +169,6 @@ namespace OMControlLibrary
 							{
 								ProxyType type = row.Cells["Type"].Value as ProxyType;
                                if( type.IsEditable &&  (type.IsPrimitive || type.IsNullable))
-								//if (type.IsEditable)
 								{
 									row.Cells[2].ReadOnly = false;
 								}
@@ -356,7 +358,9 @@ namespace OMControlLibrary
 
 		private void SaveIndex()
 		{
+           
 		    ConnParams conparam = null;
+		    bool customConfig = false;
 		    SaveIndexClass saveIndexInstance = null;
 			try
 			{
@@ -372,9 +376,11 @@ namespace OMControlLibrary
 				CloseQueryResultToolWindows();
 
 				conparam = OMEInteraction.GetCurrentRecentConnection().ConnParam;
-			    OMEInteraction.CloseOMEdb(); 
-				AssemblyInspectorObject.Connection.Closedb(); 
-				saveIndexInstance.SaveIndex(conparam.Connection  );
+			    OMEInteraction.CloseOMEdb();
+                customConfig = AssemblyInspectorObject.Connection.CheckForCustomConfig();   
+				AssemblyInspectorObject.Connection.Closedb();
+			    AssemblyInspectorObject.Connection.SaveIndex(saveIndexInstance.Fieldname, saveIndexInstance.Classname,
+			                                                 saveIndexInstance.Indexed, conparam.Connection,customConfig );
                 MessageBox.Show("Index Saved Successfully!", Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK);
             }
             catch (Exception oEx)
@@ -388,7 +394,9 @@ namespace OMControlLibrary
                 if (tempRc != null)
                     currRecentConnection = tempRc;
                 currRecentConnection.Timestamp = DateTime.Now;
-                AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentConnection);
+
+
+                AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentConnection, customConfig);
                 OMEInteraction.SetCurrentRecentConnection(currRecentConnection);
 
                 if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
