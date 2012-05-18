@@ -66,6 +66,7 @@ namespace OManager.BusinessLayer.UIHelper
             lstFav.RenameFolderInDatabase(oldFav, newFav);
         }
 
+
         public static FavouriteFolder GetFolderfromDatabaseByFoldername(string folderName)
         {
             FavouriteList lstFav = new FavouriteList(GetCurrentRecentConnection().ConnParam);
@@ -111,6 +112,12 @@ namespace OManager.BusinessLayer.UIHelper
             return rQueries.ReturnTimeWhenRecentQueriesCreated();
         }
 
+        public static void DeleteConfigConnection(string path, ConnParams connnection)
+        {
+            RecentQueries rQueries = new RecentQueries(connnection);
+            rQueries.RemoveCustomConfigPath(path); 
+        }
+        
         public static List<RecentQueries> FetchRecentQueries(bool checkRemote)
         {
             return Config.Config.Instance.GetRecentQueries(checkRemote);

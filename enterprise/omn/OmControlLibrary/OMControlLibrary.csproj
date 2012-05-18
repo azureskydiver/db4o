@@ -73,7 +73,6 @@
     <Compile Include="AboutOME.Designer.cs">
       <DependentUpon>AboutOME.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppDomainDetails.cs" />
     <Compile Include="ChooseAssemblies.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +143,10 @@
     <Compile Include="ObjectBrowser.Designer.cs">
       <DependentUpon>ObjectBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="OMEAppDomain\AppDomainDetails.cs" />
+    <Compile Include="OMEAppDomain\CommonForAppDomain.cs" />
+    <Compile Include="OMEAppDomain\CustomConfigAppDomain.cs" />
+    <Compile Include="OMEAppDomain\IAppDomainDetails.cs" />
     <Compile Include="OMEClasses\ApplicationManager.cs" />
     <Compile Include="OMEClasses\BackUp.cs" />
     <Compile Include="OMEClasses\DemoDb.cs" />
@@ -179,10 +182,6 @@
     </Compile>
     <Compile Include="QueryResult.Designer.cs">
       <DependentUpon>QueryResult.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Resource.jp.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="TabStrip\BaseClasses\BaseStyledPanel.cs">
       <SubType>Component</SubType>
@@ -256,16 +255,6 @@
     <EmbeddedResource Include="Resources\Resource.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Resource.jp.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.jp.resx</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Resource.jp.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.jp.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LoggingBlock\LoggingBlock.csproj">
@@ -280,6 +269,10 @@
       <Project>{FAD4092B-6902-48D4-ADC5-673D4C799AEA}</Project>
       <Name>OMAddinDataTransferLayer-2008</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OMCustomConfigImplementation\OMCustomConfigImplementation-2008.csproj">
+      <Project>{7C5784D8-39A6-4174-8596-248BC16D189B}</Project>
+      <Name>OMCustomConfigImplementation-2008</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TreeGridView\ExpandableGridView.csproj">
       <Project>{2EFE526F-79B3-49BC-9575-A7B258C59BB5}</Project>
       <Name>ExpandableGridView</Name>
@@ -292,6 +285,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ChooseAssemblies.resx">
       <DependentUpon>ChooseAssemblies.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Images\db4o.ico" />
     <EmbeddedResource Include="ProgressBar.resx">

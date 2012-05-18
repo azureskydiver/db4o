@@ -53,8 +53,16 @@
 								<File Id="LoggingBlock.id" 
 									  Name="LoggingBlock.dll" 
 									  Source="@dir.omn.output@\LoggingBlock.dll" DiskId="1" Vital="yes" />
-							  
-								<File Id="Microsoft.Practices.EnterpriseLibrary.Common.id" 
+                
+                <File Id="OMCustomConfigurationforUser.id"
+									  Name="OMCustomConfigurationforUser.dll"
+									  Source="@dir.omn.output@\OMCustomConfigurationforUser.dll" DiskId="1" Vital="yes" />
+                
+                <File Id="OMCustomConfigImplementation.id"
+                  Name="OMCustomConfigImplementation.dll"
+                  Source="@dir.omn.output@\OMCustomConfigImplementation.dll" DiskId="1" Vital="yes" />
+               
+                <File Id="Microsoft.Practices.EnterpriseLibrary.Common.id" 
 									  Name="Microsoft.Practices.EnterpriseLibrary.Common.dll" 
 									  Source="@dir.omn.output@\Microsoft.Practices.EnterpriseLibrary.Common.dll" DiskId="1" Vital="yes" />
 							  

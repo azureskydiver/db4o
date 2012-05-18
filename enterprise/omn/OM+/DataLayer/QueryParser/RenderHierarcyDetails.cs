@@ -217,7 +217,7 @@ namespace OManager.DataLayer.QueryParser
                     IType fieldType = ResolveFieldType(field);
                     if (fieldType == null)
                         continue;
-                    if (fieldType.IsEditable)
+                    if (fieldType.IsEditable )
                         CreatePrimitiveNode(field, id, fieldType);
                     else if (fieldType.IsCollection)
                         RenderCollection(id, field);
@@ -269,6 +269,7 @@ namespace OManager.DataLayer.QueryParser
 			{
 				object currObj = Db4oClient.Client.Ext().GetByID(id);
 				object value = field.Get(currObj);
+                 IType type = ResolveFieldType(field);
 				if (value != null)
 				{
 					container.Ext().Activate(value, 1);
@@ -278,40 +279,48 @@ namespace OManager.DataLayer.QueryParser
                         return;
                     }
 				}
-				IType type = ResolveFieldType(field);
-				TreeGridViewRenderer treeGridViewRenderer = new TreeGridViewRenderer();
-				treeGridViewRenderer.DisplayFieldName = AppendIDTo(field.GetName(), GetLocalID(value), type);
-			    treeGridViewRenderer.FieldName = field.GetName();
-				treeGridViewRenderer.FieldValue = value != null ?type.FullName   : BusinessConstants.DB4OBJECTS_NULL;
-			    treeGridViewRenderer.QualifiedName = field.GetFieldType().GetName();
-				treeGridViewRenderer.FieldType = SetFieldType(type);
-				treeGridViewRenderer.ReadOnlyStatus = readOnly;
-				treeGridViewRenderer.ObjectId = GetLocalID(value);
-				treeGridViewRenderer.ObjectType = type;
-				treeGridViewRenderer.HasSubNode = type.IsCollection || type.IsArray;
-				if (treeGridViewRenderer.HasSubNode)
-			
-				{
-					long longid = GetLocalID(value);
-					if (value is GenericObject)
-						treeGridViewRenderer.ObjectId = longid;
+                if (GetLocalID(value) == 0)
+                {
+                    CreateSimplePrimitiveNode(field, value, type);
+                }
+                else
+                {
 
-					else if (longid != 0)
-						treeGridViewRenderer.ObjectId = longid;
-					else
-					{
-						treeGridViewRenderer.SubObject = value;
-					}
-				}
-				listTreeGridViewRenderers.Add(treeGridViewRenderer);
-				if (currObj is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_KEY)
-					treeGridViewRenderer.ReadOnlyStatus = true;
-				else if (currObj is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_VALUE)
-					treeGridViewRenderer.ReadOnlyStatus = readOnly;
-				else if (field.Get(currObj) == null)
-					treeGridViewRenderer.ReadOnlyStatus = true;
-				else
-					treeGridViewRenderer.ReadOnlyStatus = true;
+
+                   
+                    TreeGridViewRenderer treeGridViewRenderer = new TreeGridViewRenderer();
+                    treeGridViewRenderer.DisplayFieldName = AppendIDTo(field.GetName(), GetLocalID(value), type);
+                    treeGridViewRenderer.FieldName = field.GetName();
+                    treeGridViewRenderer.FieldValue = value != null ? type.FullName : BusinessConstants.DB4OBJECTS_NULL;
+                    treeGridViewRenderer.QualifiedName = field.GetFieldType().GetName();
+                    treeGridViewRenderer.FieldType = SetFieldType(type);
+                    treeGridViewRenderer.ReadOnlyStatus = readOnly;
+                    treeGridViewRenderer.ObjectId = GetLocalID(value);
+                    treeGridViewRenderer.ObjectType = type;
+                    treeGridViewRenderer.HasSubNode = type.IsCollection || type.IsArray;
+                    if (treeGridViewRenderer.HasSubNode)
+                    {
+                        long longid = GetLocalID(value);
+                        if (value is GenericObject)
+                            treeGridViewRenderer.ObjectId = longid;
+
+                        else if (longid != 0)
+                            treeGridViewRenderer.ObjectId = longid;
+                        else
+                        {
+                            treeGridViewRenderer.SubObject = value;
+                        }
+                    }
+                    listTreeGridViewRenderers.Add(treeGridViewRenderer);
+                    if (currObj is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_KEY)
+                        treeGridViewRenderer.ReadOnlyStatus = true;
+                    else if (currObj is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_VALUE)
+                        treeGridViewRenderer.ReadOnlyStatus = readOnly;
+                    else if (field.Get(currObj) == null)
+                        treeGridViewRenderer.ReadOnlyStatus = true;
+                    else
+                        treeGridViewRenderer.ReadOnlyStatus = true;
+                }
 
 			}
 			catch (Exception oEx)
@@ -509,15 +518,8 @@ namespace OManager.DataLayer.QueryParser
 			{
 				object currObj = Db4oClient.Client.Ext().GetByID(id);
 				object value = field.Get(currObj);
-				TreeGridViewRenderer treeGridViewRenderer = new TreeGridViewRenderer();
-				treeGridViewRenderer.DisplayFieldName = field.GetName() ;
-			    treeGridViewRenderer.FieldName = field.GetName();
-				treeGridViewRenderer.FieldValue = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
-				treeGridViewRenderer.FieldType = SetFieldType(type);
-				treeGridViewRenderer.ReadOnlyStatus = readOnly;
-				treeGridViewRenderer.ObjectType = type;
-				treeGridViewRenderer.ObjectId = 0;
-				listTreeGridViewRenderers.Add(treeGridViewRenderer);
+				var treeGridViewRenderer = FillValuesInTreeGridViewRenderer(field, type, value);
+			    listTreeGridViewRenderers.Add(treeGridViewRenderer);
 				
 			}
 			catch (Exception oEx)
@@ -525,21 +527,14 @@ namespace OManager.DataLayer.QueryParser
 				LoggingHelper.HandleException(oEx);
 			}
 		}
+	
 
-		public void CreatePrimitiveNode(IReflectField field, object currObj, IType type)
+	    public void CreatePrimitiveNode(IReflectField field, object currObj, IType type)
 		{
 			try
 			{
 				object value = field.Get(currObj);
-				TreeGridViewRenderer treeGridViewRenderer = new TreeGridViewRenderer();
-				treeGridViewRenderer.DisplayFieldName = field.GetName();
-			    treeGridViewRenderer.FieldName = field.GetName(); 
-                treeGridViewRenderer.FieldValue = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
-				treeGridViewRenderer.FieldType = SetFieldType(type);
-				treeGridViewRenderer.ReadOnlyStatus = readOnly;
-				treeGridViewRenderer.ObjectId = 0;
-				treeGridViewRenderer.ObjectType = type;
-				listTreeGridViewRenderers.Add(treeGridViewRenderer);
+                var treeGridViewRenderer = FillValuesInTreeGridViewRenderer(field, type, value);
 				if (currObj is IDictionary)
 				{
 					treeGridViewRenderer.ReadOnlyStatus = field.GetName() != BusinessConstants.DB4OBJECTS_VALUE1;
@@ -547,14 +542,38 @@ namespace OManager.DataLayer.QueryParser
 					treeGridViewRenderer.SubObject = currObj;  
 				}
 
-
+                listTreeGridViewRenderers.Add(treeGridViewRenderer);
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.HandleException(oEx);
 			}
 		}
-       
+        public void CreateSimplePrimitiveNode(IReflectField field, object value, IType type)
+        {
+            try
+            {
+                var treeGridViewRenderer = FillValuesInTreeGridViewRenderer(field, type, value);
+                treeGridViewRenderer.ReadOnlyStatus = !type.IsPrimitive || readOnly;
+                listTreeGridViewRenderers.Add(treeGridViewRenderer);
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.HandleException(oEx);
+            }
+        }
+        private TreeGridViewRenderer FillValuesInTreeGridViewRenderer(IReflectField field, IType type, object value)
+        {
+            TreeGridViewRenderer treeGridViewRenderer = new TreeGridViewRenderer();
+            treeGridViewRenderer.DisplayFieldName = field.GetName();
+            treeGridViewRenderer.FieldName = field.GetName();
+            treeGridViewRenderer.FieldValue = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
+            treeGridViewRenderer.FieldType = SetFieldType(type);
+            treeGridViewRenderer.ReadOnlyStatus = readOnly;
+            treeGridViewRenderer.ObjectType = type;
+            treeGridViewRenderer.ObjectId = 0;
+            return treeGridViewRenderer;
+        }
 		/**
 		 * Each node in "details view" holds a reference for its corresponding
 		 * object in the object model. While this works fine with reference

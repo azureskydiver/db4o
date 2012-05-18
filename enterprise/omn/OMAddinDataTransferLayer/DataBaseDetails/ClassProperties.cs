@@ -40,10 +40,10 @@ namespace OMAddinDataTransferLayer.DataBaseDetails
 			return classDetails.GetNumberOfObjects();
 		}
 
-		public void SetIndexedConfiguration(ArrayList fieldname, string className, ArrayList isIndexed, string dbPath)
+		public void SetIndexedConfiguration(ArrayList fieldname, string className, ArrayList isIndexed, string dbPath, bool customConfig)
 		{
 			ClassDetails classDetails = new ClassDetails(className);
-			classDetails.SetIndex(fieldname, className, isIndexed,dbPath );
+            classDetails.SetIndex(fieldname, className, isIndexed, dbPath, customConfig);
 		}
 
 		public override object InitializeLifetimeService()

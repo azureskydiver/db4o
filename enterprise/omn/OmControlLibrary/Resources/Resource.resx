@@ -265,7 +265,7 @@
     <value>Checking Credentials...</value>
   </data>
   <data name="PROPERTIES_TAB_CAPTION" xml:space="preserve">
-    <value> Properties</value>
+    <value>Properties</value>
   </data>
   <data name="PROPERTIES_TAB_DATABASE_CAPTION" xml:space="preserve">
     <value>DataBase Properties</value>

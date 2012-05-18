@@ -102,32 +102,33 @@ namespace OManager.DataLayer.PropertyDetails
             }
            
         }
-		public void SetIndex(ArrayList fieldnames, string className, ArrayList Indexed, string path)
-		{
-		    IObjectContainer con = null;
+        public void SetIndex(ArrayList fieldnames, string className, ArrayList Indexed, string path, bool customConfig)
+        {
+            IObjectContainer con = null;
             try
             {
-                IEmbeddedConfiguration embeddedConfig = Db4oEmbedded.NewConfiguration();
+                IEmbeddedConfiguration embeddedConfig = !customConfig ? Db4oEmbedded.NewConfiguration() : Config();
 
                 for (int i = 0; i < fieldnames.Count; i++)
                 {
-                    embeddedConfig.Common.ObjectClass(className).ObjectField(fieldnames[i].ToString()).Indexed(Convert.ToBoolean(Indexed[i]));
+                    embeddedConfig.Common.ObjectClass(className).ObjectField(fieldnames[i].ToString()).Indexed(
+                        Convert.ToBoolean(Indexed[i]));
                 }
 
                 con = Db4oEmbedded.OpenFile(embeddedConfig, path);
                 IReflectClass clazz = con.Ext().Reflector().ForName(className);
                 con.QueryByExample(clazz);
-                
-            }
-            catch (Exception e)
-            {
-                
-                throw e;
             }
             finally
             {
                 con.Close();
             }
-		}
+        }
+
+        public static IEmbeddedConfiguration Config()
+        {
+            IEmbeddedConfiguration config1 = ManageCustomConfig.ConfigureEmbeddedCustomConfig();
+            return config1;
+        }
     }
 }

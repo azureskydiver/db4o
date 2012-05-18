@@ -83,7 +83,11 @@ namespace OManager.DataLayer.Reflection
 
     	public bool IsPrimitive
         {
-            get { return _type.IsPrimitive() || IsString(); }
+            
+            get
+            {
+                return _type.IsPrimitive() || IsString();
+            }
         }
 
         public bool IsCollection

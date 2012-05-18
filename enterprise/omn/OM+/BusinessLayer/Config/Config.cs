@@ -39,6 +39,7 @@ namespace OManager.BusinessLayer.Config
 
         }
 
+
         public bool SaveRecentConnection(RecentQueries recentQueries)
         {
             try
@@ -131,7 +132,6 @@ namespace OManager.BusinessLayer.Config
             Db4oClient.OMNConnection.Delete(pathContainer.SearchPath);
             pathContainer.SearchPath = AssemblySearchPath;
             pathContainer.ConnParam = OMEInteraction.GetCurrentRecentConnection().ConnParam;
-            // pathContainer.ConnParam = GetConnparams(Db4oClient.OMNConnection); 
             Db4oClient.OMNConnection.Store(pathContainer);
             Db4oClient.CloseRecentConnectionFile();
         }

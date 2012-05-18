@@ -46,7 +46,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Dependencies\Db4objects.Db4o.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.CS, Version=8.0.184.15484, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o.CS, Version=8.1.236.16058, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Dependencies\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
@@ -83,6 +83,7 @@
     <Compile Include="BusinessLayer\QueryManager\OMQueryClause.cs" />
     <Compile Include="BusinessLayer\UIHelper\OMEInteraction.cs" />
     <Compile Include="BusinessLayer\UIHelper\PagingData.cs" />
+    <Compile Include="DataLayer\Connection\ManageCustomConfig.cs" />
     <Compile Include="DataLayer\Connection\ProxyAuthenticator.cs" />
     <Compile Include="DataLayer\Connection\SaveFavouriteClasses.cs" />
     <Compile Include="DataLayer\Connection\SaveSearchStrings.cs" />
@@ -138,6 +139,10 @@
     <ProjectReference Include="..\LoggingBlock\LoggingBlock.csproj">
       <Project>{F8B76B1A-3675-4EA5-95FD-8A6EB1B484C6}</Project>
       <Name>LoggingBlock</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OMCustomConfig\OMCustomConfigurationforUser-2008.csproj">
+      <Project>{EFFB9209-203B-492E-9DE2-83E0C5026226}</Project>
+      <Name>OMCustomConfigurationforUser-2008</Name>
     </ProjectReference>
     <ProjectReference Include="..\TreeGridView\ExpandableGridView.csproj">
       <Project>{2EFE526F-79B3-49BC-9575-A7B258C59BB5}</Project>
