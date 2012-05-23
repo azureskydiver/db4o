@@ -54,33 +54,41 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cecil.FlowAnalysis">
+    <Reference Include="Cecil.FlowAnalysis, Version=0.1.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\Cecil.FlowAnalysis.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o">
+    <Reference Include="Db4objects.Db4o, Version=8.1.249.16099, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\Db4objects.Db4o.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.CS">
+    <Reference Include="Db4objects.Db4o.CS, Version=8.1.249.16099, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
-    <Reference Include="DB4objects.Db4o.CS.Optional">
+    <Reference Include="DB4objects.Db4o.CS.Optional, Version=8.1.249.16099, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\DB4objects.Db4o.CS.Optional.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.Instrumentation">
-      <HintPath>..\..\..\libs\net\Db4objects.Db4o.Instrumentation.dll</HintPath>
+    <Reference Include="Db4objects.Db4o.Data.Services, Version=8.1.249.16099, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libs\net\Db4objects.Db4o.Data.Services.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.Linq">
+    <Reference Include="Db4objects.Db4o.Linq, Version=8.1.249.16099, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\Db4objects.Db4o.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Db4objects.Db4o.NativeQueries">
       <HintPath>..\..\..\libs\net\Db4objects.Db4o.NativeQueries.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.Optional">
+    <Reference Include="Db4objects.Db4o.Optional, Version=8.1.249.16099, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\Db4objects.Db4o.Optional.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Mono.Cecil">
+    <Reference Include="Mono.Cecil, Version=0.9.4.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Pdb">
@@ -90,11 +98,14 @@
       <HintPath>..\..\..\libs\net\Mono.GetOptions.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Reflection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\net\Mono.Reflection.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\libs\net\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OMCustomConfigurationforUser">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\db4o\db4o-8.1\Object Manager Enterprise\OMCustomConfigurationforUser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -180,6 +191,7 @@
     <Compile Include="Code\disconnectedobj\objectidentity\ObjectIdentityExamples.cs" />
     <Compile Include="Code\disconnectedobj\objectidentity\Pilot.cs" />
     <Compile Include="Code\indexing\traverse\TraverseIndexExample.cs" />
+    <Compile Include="Code\omn\ConfigForOMN.cs" />
     <Compile Include="Code\performance\GenericHolder.cs" />
     <Compile Include="Code\performance\Item.cs" />
     <Compile Include="Code\performance\ItemHolder.cs" />
@@ -297,21 +309,22 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\libs\net\Db4oUnit.Extensions\Db4oUnit.Extensions-2010.csproj">
-      <Project>{9446B00C-E8A6-4CEB-83DE-2CAC5168DFE3}</Project>
-      <Name>Db4oUnit.Extensions-2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\libs\net\Db4oUnit\Db4oUnit-2010.csproj">
-      <Project>{8F82F8B0-95B6-4553-BDA8-BD9A954E682F}</Project>
-      <Name>Db4oUnit-2010</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\DataSources\Db4oDoc.Code.Reporting.Address.datasource" />
     <None Include="Properties\DataSources\Db4oDoc.Code.Reporting.Person.datasource" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Code\Reporting\ExampleReport.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\db4o-binaries\db4o-8.1\src\Db4oUnit.Extensions\Db4oUnit.Extensions-2010.csproj">
+      <Project>{9446B00C-E8A6-4CEB-83DE-2CAC5168DFE3}</Project>
+      <Name>Db4oUnit.Extensions-2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\db4o-binaries\db4o-8.1\src\Db4oUnit\Db4oUnit-2010.csproj">
+      <Project>{8F82F8B0-95B6-4553-BDA8-BD9A954E682F}</Project>
+      <Name>Db4oUnit-2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

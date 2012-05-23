@@ -74,14 +74,17 @@
     <Reference Include="Db4objects.Db4o.Linq">
       <HintPath>..\..\..\libs\net\Db4objects.Db4o.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Db4o.Optional">
-      <HintPath>..\..\..\libs\net\Db4objects.Db4o.Optional.dll</HintPath>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\libs\net\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="Db4objects.Drs">
-      <HintPath>..\..\..\libs\net\Db4objects.Drs.dll</HintPath>
+    <Reference Include="Mono.Reflection">
+      <HintPath>..\..\..\libs\net\Mono.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\..\libs\net\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OMCustomConfigurationforUser">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\db4o\db4o-8.1\Object Manager Enterprise\OMCustomConfigurationforUser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -151,6 +154,7 @@
     <Compile Include="Code\indexing\check\CheckForAndIndex.vb" />
     <Compile Include="Code\indexing\traverse\TraverseIndexExample.vb" />
     <Compile Include="Code\metainfo\MetaInfoExample.vb" />
+    <Compile Include="Code\omn\ConfigForOMN.vb" />
     <Compile Include="Code\performance\GenericHolder.vb" />
     <Compile Include="Code\performance\Item.vb" />
     <Compile Include="Code\performance\ItemHolder.vb" />
@@ -228,6 +232,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\basics\Db4oBasics.vb" />
@@ -306,16 +311,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\libs\net\Db4oUnit.Extensions\Db4oUnit.Extensions-2010.csproj">
-      <Project>{9446B00C-E8A6-4CEB-83DE-2CAC5168DFE3}</Project>
-      <Name>Db4oUnit.Extensions-2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\libs\net\Db4oUnit\Db4oUnit-2010.csproj">
-      <Project>{8F82F8B0-95B6-4553-BDA8-BD9A954E682F}</Project>
-      <Name>Db4oUnit-2010</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

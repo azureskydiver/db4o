@@ -1338,12 +1338,12 @@
     StartSection="false"
     StartChapter="false"
     AutoMerge="after-head"
-    AbsoluteLink="file:///C:/Users/Gamlor/Develop/db4o/ReferenceDocumentation/newTutorial/DRSFlare/Reference.flprj#JavaWeb"></TocEntry>
+    AbsoluteLink="file:///C:/Users/Gamlor/Develop/versant-stuff/RefDoc/reference/DRSFlare/Reference.flprj#JavaWeb"></TocEntry>
   <TocEntry
     Title="db4o Replication System"
     conditions="Primary..NET"
     Link="../../../DRSFlare/Reference.flprj#NetWeb"
-    AbsoluteLink="file:///C:/Users/Gamlor/Develop/db4o/ReferenceDocumentation/newTutorial/DRSFlare/Reference.flprj#NetWeb"></TocEntry>
+    AbsoluteLink="file:///C:/Users/Gamlor/Develop/versant-stuff/RefDoc/reference/DRSFlare/Reference.flprj#NetWeb"></TocEntry>
   <TocEntry
     Title="Object Manager Enterprise"
     Link="/Content/object_manager_enterprise.htm">
@@ -1388,6 +1388,10 @@
       Title="Viewing enum Values In OME"
       Link="/Content/object_manager_enterprise/ome_for_visual_studio/viewing_enum_values_in_ome.htm"
       conditions="Primary..NET"></TocEntry>
+    <TocEntry
+      Title="Add Custom Configuration"
+      Link="/Content/object_manager_enterprise/ome_for_visual_studio/add_custom_config.htm"
+      conditions="Primary..NET" />
   </TocEntry>
   <TocEntry
     Title="Community"
