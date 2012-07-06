@@ -21,7 +21,7 @@ namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent.Dictionary
 
 		protected override IDictionary<string, ICollectionElement> SingleCollection()
 		{
-			CollectionHolder<IDictionary<string, ICollectionElement>> holder = (CollectionHolder<IDictionary<string, ICollectionElement>>)RetrieveOnlyInstance(typeof(CollectionHolder<IDictionary<string, ICollectionElement>>));
+			var holder = (CollectionHolder<IDictionary<string, ICollectionElement>>)RetrieveOnlyInstance(typeof(CollectionHolder<IDictionary<string, ICollectionElement>>));
 			return holder.Collection;
 		}
 
