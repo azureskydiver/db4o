@@ -42,40 +42,39 @@ namespace Db4objects.Db4o.Foundation.Collections
 			return InitializerFor(destination);
 		}
 
-		private static ICollectionInitializer InitializerFor(object destination)
+        private static ICollectionInitializer InitializerFor(object destination)
 		{
-			Type destinationType = destination.GetType();
+			var destinationType = destination.GetType();
 			if (!destinationType.IsGenericType)
 			{
 				throw new ArgumentException("Unknown collection: " + destination);
 			}
 
-			Type containerType = GenericContainerTypeFor(destination);
+			Type collElemType;
+			var containerType = GenericContainerTypeFor(destination, out collElemType);
 			if (containerType != null)
 			{
-				return GetInitializer(destination, _initializerByType[containerType]);
+				return GetInitializer(destination, _initializerByType[containerType], collElemType);
 			}
 
 			throw new ArgumentException("Unknown collection: " + destination);
 		}
 
-		private static Type GenericContainerTypeFor(object destination)
+        private static Type GenericContainerTypeFor(object destination, out Type collElemType)
 		{
-			Type containerType = destination.GetType().GetGenericTypeDefinition();
+			var type = destination.GetType();
+			var genArgs = type.GetGenericArguments();
+			var containerType = type.GetGenericTypeDefinition();
+			
+			var collType = ResolveCollectionAndElementType(containerType, genArgs, out collElemType);
+			if (collType != null) return collType;
+
 			while (containerType != null && !_initializerByType.ContainsKey(containerType))
 			{
-				foreach (Type interfaceType in containerType.GetInterfaces())
+				foreach (var interfaceType in containerType.GetInterfaces())
 				{
-					if (!interfaceType.IsGenericType)
-					{
-						continue;
-					}
-
-					Type genericInterfaceType = interfaceType.GetGenericTypeDefinition();
-					if (_initializerByType.ContainsKey(genericInterfaceType))
-					{
-						return genericInterfaceType;
-					}
+					collType = ResolveCollectionAndElementType(interfaceType, genArgs, out collElemType);
+					if (collType != null) return collType;
 				}
 
 				containerType = containerType.BaseType;
@@ -84,13 +83,50 @@ namespace Db4objects.Db4o.Foundation.Collections
 			return containerType;
 		}
 
-		private static ICollectionInitializer GetInitializer(object destination, Type initializerType)
+        private static Type ResolveCollectionAndElementType(Type interfaceType, IList<Type> genArgs, out Type collElemType)
+		{
+			collElemType = null;
+
+			if (!interfaceType.IsGenericType)
+			{
+				return null;
+			}
+
+            var genericInterfaceType = interfaceType.GetGenericTypeDefinition();
+			if (_initializerByType.ContainsKey(genericInterfaceType))
+			{
+				var elementType = interfaceType.GetGenericArguments()[0];
+				if (!elementType.IsGenericParameter)
+				{
+					throw new Exception("Could not deduce generic type argument for collection ");
+                }
+
+#if CF_3_5
+                if (genArgs.Count != 1)
+                {
+                    throw new NotSupportedException("Collection type not supported: " + interfaceType);
+                }
+                collElemType = genArgs[0];
+
+                if (collElemType.IsGenericParameter)
+                {
+                    throw new NotSupportedException("Collection type not supported: " + interfaceType);
+                }
+#else
+				collElemType = genArgs[elementType.GenericParameterPosition];
+#endif
+				return genericInterfaceType;
+			}
+
+			return null;
+		}
+
+		private static ICollectionInitializer GetInitializer(object destination, Type initializerType, Type collElementType)
 		{
 			ICollectionInitializer initializer = null;
-			Type containedElementType = ContainerElementTypeFor(destination);
-			if (containedElementType != null)
+			if (collElementType != null)
 			{
-				Type genericProtocolType = initializerType.MakeGenericType(containedElementType);
+				Type genericProtocolType = initializerType.MakeGenericType(collElementType);
 				initializer = InstantiateInitializer(destination, genericProtocolType);
 			}
 			return initializer;
@@ -110,12 +146,6 @@ namespace Db4objects.Db4o.Foundation.Collections
 	        return (ICollectionInitializer) constructor.Invoke(new object[] {destination});
 #endif
 	    }
-
-	    private static Type ContainerElementTypeFor(object destination)
-		{
-	    	Type containerType = destination.GetType();
-	    	return containerType.GetGenericArguments()[0];
-		}
 
 		private sealed class ListInitializer : ICollectionInitializer
 		{

@@ -10,6 +10,7 @@ namespace Db4objects.Db4o.Tests.CLI2.Handlers
         {
             return new Type[]
                    	{
+						typeof(CustomGenericCollectionTestCase),
 						typeof(ClassDerivedFromGenericCollectionsTestSuite),
                    		typeof(TypeHandlerConfigurationTestCase),
 #if !SILVERLIGHT //TODO: Investigate failure on Silverlight
