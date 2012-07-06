@@ -239,6 +239,38 @@ namespace Db4objects.Db4o.Tests.CLI2.Collections.Transparent.Dictionary
 
 		#endregion
 
+		#region Tests for ICollection members
+
+		public void TestICollection_CopyTo()
+		{
+			var plainDictionary = (ICollection) NewPopulatedPlainCollection();
+			var expectedlPairs = new KeyValuePair<string, ICollectionElement>[plainDictionary.Count];
+
+			plainDictionary.CopyTo(expectedlPairs, 0);
+
+			var actual = (ICollection) SingleCollection();
+			var actualPairs = new KeyValuePair<string, ICollectionElement>[plainDictionary.Count];
+			actual.CopyTo(actualPairs, 0);
+
+			IteratorAssert.AreEqual(expectedlPairs, actualPairs);
+		}
+
+		public void TestICollection_SyncRoot()
+		{
+			var actual = (ICollection) SingleCollection();
+			Assert.IsNotNull(actual.SyncRoot);
+		}
+		
+		public void TestICollection_IsSynchronized()
+		{
+			var actual = (ICollection) SingleCollection();
+			var res = actual.IsSynchronized;
+		}
+
+		#endregion
+
+
+
 		private static readonly string ExistingKey = Names[2];
 		private const string NonExistingKey = "ogro";
 	}
