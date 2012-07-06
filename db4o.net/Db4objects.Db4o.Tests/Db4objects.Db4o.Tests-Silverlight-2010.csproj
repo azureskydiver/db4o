@@ -1145,6 +1145,7 @@
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Handlers\AllTests.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Handlers\ClassDerivedFromGenericCollectionsTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Handlers\CollectionHelper.cs"/>
+<Compile Include="native\Db4objects.Db4o.Tests\CLI2\Handlers\CustomGenericCollectionTestCase.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Handlers\GenericCollectionTestElementSpec.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Handlers\GenericCollectionTestFactory.cs"/>
 <Compile Include="native\Db4objects.Db4o.Tests\CLI2\Handlers\GenericCollectionTypeHandlerGreaterSmallerTestSuite.cs"/>
