@@ -15,7 +15,11 @@ namespace Db4objects.Db4o.Tests.CLI2.Handlers
 
 	public class ICollectionImplSecondGenericArg<T,X> : Base, ICollection<X>
 	{
+#if SILVERLIGHT
+		public List<X> coll = new List<X>();
+#else
 		private List<X> coll = new List<X>();
+#endif
 
 		public IEnumerator<X> GetEnumerator()
 		{
@@ -90,6 +94,11 @@ namespace Db4objects.Db4o.Tests.CLI2.Handlers
 
 		public Item(params string[] args)
 		{
+			if (args == null)
+			{
+				return;
+			}
+
 			foreach (var s in args)
 			{
 				coll.Add(s);
