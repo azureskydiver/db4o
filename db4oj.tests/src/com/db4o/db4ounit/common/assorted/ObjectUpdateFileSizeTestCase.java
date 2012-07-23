@@ -50,7 +50,7 @@ public class ObjectUpdateFileSizeTestCase extends AbstractDb4oTestCase implement
 			 * FIXME: the database file size is uncertain? 
 			 * We met similar problem before.
 			 */
-			Assert.isSmaller(30, afterUpdate - beforeUpdate);
+			Assert.isSmallerOrEqual(30, afterUpdate - beforeUpdate);
 		}		
 		
 	}
