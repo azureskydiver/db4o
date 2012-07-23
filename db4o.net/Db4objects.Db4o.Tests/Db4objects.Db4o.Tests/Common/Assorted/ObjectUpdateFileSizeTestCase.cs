@@ -53,7 +53,7 @@ namespace Db4objects.Db4o.Tests.Common.Assorted
 				}
 				Defragment();
 				long afterUpdate = DbSize();
-				Assert.IsSmaller(30, afterUpdate - beforeUpdate);
+				Assert.IsSmallerOrEqual(30, afterUpdate - beforeUpdate);
 			}
 		}
 
