@@ -6,8 +6,6 @@ using System.Windows.Forms;
 using OMAddinDataTransferLayer;
 using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Common;
-using OManager.DataLayer.Reflection;
-using OMControlLibrary.Common;
 
 namespace OMControlLibrary.Common
 {
@@ -148,7 +146,7 @@ namespace OMControlLibrary.Common
 						controlType = typeof(DataGridViewComboBoxEditingControl);
 					}
 				}
-				catch (Exception oEx)
+				catch (Exception)
 				{
 				}
 				return controlType;
@@ -166,17 +164,11 @@ namespace OMControlLibrary.Common
 
 		public void FillBoolColumnValue(DataGridViewComboBoxEditingControl ctrl)
 		{
-			try
-			{
+			
 				ctrl.Items.Clear();
-				ctrl.Items.AddRange(new object[] { OManager.BusinessLayer.Common.BusinessConstants.CONDITION_TRUE, 
-                            OManager.BusinessLayer.Common.BusinessConstants.CONDITION_FALSE});
+				ctrl.Items.AddRange(new object[] { BusinessConstants.CONDITION_TRUE,BusinessConstants.CONDITION_FALSE});
 				ctrl.SelectedIndex = 0;
-			}
-			catch (Exception oEx)
-			{
-				// LoggingHelper.ShowMessage(oEx);
-			}
+			
 		}
 
 		#endregion Override methods

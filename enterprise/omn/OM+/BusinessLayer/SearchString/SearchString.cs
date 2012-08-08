@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace OManager.BusinessLayer.Login
+namespace OManager.BusinessLayer.SearchString
 {
     public class SeachString
     {

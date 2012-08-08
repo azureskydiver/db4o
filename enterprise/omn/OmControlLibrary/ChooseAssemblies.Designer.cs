@@ -76,6 +76,7 @@
             // openFileDialog
             // 
             this.openFileDialog.FileName = "openFileDialog";
+            this.openFileDialog.Multiselect = true;
             // 
             // ChooseAssemblies
             // 

@@ -6,7 +6,7 @@ using Db4objects.Db4o.Ext ;
 using OManager.DataLayer.Connection;
 using OME.Logging.Common;
 
-namespace OManager.DataLayer.Modal
+namespace OManager.DataLayer.DBInfo
 {
     public static class DbInformation
     {

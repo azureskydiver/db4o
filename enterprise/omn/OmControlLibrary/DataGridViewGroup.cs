@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using OMAddinDataTransferLayer;
 using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.ObjectExplorer;
-using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -362,11 +361,6 @@ namespace OMControlLibrary
 			}
 
 		}
-
-	    private static IType FieldTypeForConstraint(DataGridViewRow constraint)
-	    {
-            return (IType)constraint.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
-	    }
 
 	    /// <summary>
 		/// Handles the Data Error if occured

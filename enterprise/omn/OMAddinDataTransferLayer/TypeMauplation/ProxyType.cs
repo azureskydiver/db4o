@@ -1,4 +1,5 @@
 ﻿using System;
+using OManager.Business.Config;
 using OManager.DataLayer.Reflection;
 
 namespace OMAddinDataTransferLayer.TypeMauplation

@@ -8,8 +8,7 @@ namespace  OManager.DataLayer.Connection
 {
     public class ProxyAuthenticator
     {
-        [Transient]
-        IObjectContainer _container;
+       
         ProxyAuthentication _proxyAuthObj;
 
         public ProxyAuthentication ProxyAuthObj
@@ -20,40 +19,36 @@ namespace  OManager.DataLayer.Connection
 
         public void AddProxyInfoToDb(ProxyAuthentication proxyAuthObj)
         {
-           
-            _proxyAuthObj = proxyAuthObj;
-            _container = Db4oClient.OMNConnection;
             ProxyAuthenticator proxyobj = ReturnProxyAuthenticationInfo();
             if (proxyobj == null)
             {
-                _container.Store(this);
+                Db4oClient.OMNConnection.Store(this);
             }
             else
             {
                 proxyobj._proxyAuthObj = proxyAuthObj;
-                _container.Store(proxyobj);
+                Db4oClient.OMNConnection.Store(proxyobj);
             }
-            _container.Commit();
-            _container.Ext().Refresh(proxyobj, 1);
+            Db4oClient.OMNConnection.Commit();
+            Db4oClient.OMNConnection.Ext().Refresh(proxyobj, 1);
+            Db4oClient.CloseRecentConnectionFile();
         }
 
         public ProxyAuthenticator ReturnProxyAuthenticationInfo()
         {
             try
             {
-                if (Db4oClient.omnConnection == null)
-                {
-                	Db4oClient.omnConnection = Config.OMNConfigDatabasePath();
-                }
-                _container = Db4oClient.OMNConnection;
-                IObjectSet ObjSet = _container.QueryByExample(typeof(ProxyAuthenticator));
-            	
+               IObjectSet ObjSet = Db4oClient.OMNConnection.QueryByExample(typeof(ProxyAuthenticator));
 				return ObjSet.Count > 0 ? (ProxyAuthenticator) ObjSet.Next() : null;
             }
             catch (Exception e)
             {
                 LoggingHelper.HandleException(e);
                 return null;
+            }
+            finally
+            {
+                Db4oClient.CloseRecentConnectionFile();
             }
         }
     }

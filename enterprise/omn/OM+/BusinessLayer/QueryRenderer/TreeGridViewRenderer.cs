@@ -1,5 +1,5 @@
 using System;
-using OManager.DataLayer.Reflection;
+using OManager.Business.Config;
 
 namespace OManager.BusinessLayer.QueryRenderer
 {

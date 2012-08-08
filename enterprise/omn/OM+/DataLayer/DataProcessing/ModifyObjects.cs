@@ -2,6 +2,7 @@ using System;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
+using OManager.Business.Config;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.CommonDatalayer;
 using OManager.DataLayer.QueryParser;

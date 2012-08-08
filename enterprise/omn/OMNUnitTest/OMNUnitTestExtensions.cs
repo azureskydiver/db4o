@@ -6,6 +6,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Foundation;
 using Db4objects.Db4o.Reflect;
+using OManager.Business.Config;
 using OManager.DataLayer.Reflection;
 using Sharpen.Lang;
 using Type=System.Type;

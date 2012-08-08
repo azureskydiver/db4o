@@ -12,8 +12,7 @@ namespace OManager.DataLayer.Connection
 {
     public class ManageCustomConfig
     {
-        const string Name = "CustomConfig";
-        public static IEmbeddedConfiguration ConfigureEmbeddedCustomConfig()
+       public static IEmbeddedConfiguration ConfigureEmbeddedCustomConfig()
         {
             var embeddedCustomConfiguration =
                 (IOMNEmbeddedCustomConfigurationProvider)
@@ -34,7 +33,6 @@ namespace OManager.DataLayer.Connection
 
             try
             {
-                List<Type> results;
                 foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     Assembly assemblies = asm; 
@@ -42,7 +40,7 @@ namespace OManager.DataLayer.Connection
                          && !assemblies.GetName().FullName.Contains("mscorlib") && !assemblies.GetName().Name.Contains("Microsoft")) 
                     {
                         Type[] types = assemblies.GetTypes();
-                        //   results = (from t in assemblies.GetTypes() where customconfigType.IsAssignableFrom(t) && t.IsPublic && !t.IsInterface select t).ToList(); 
+                     
                         foreach (var type in types)
                         {
                             Type t = type;

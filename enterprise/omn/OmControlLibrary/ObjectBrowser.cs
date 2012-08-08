@@ -8,9 +8,9 @@ using EnvDTE;
 using EnvDTE80;
 using OMAddinDataTransferLayer;
 using OMAddinDataTransferLayer.TypeMauplation;
+using OManager.BusinessLayer.FavFolder;
+using OManager.BusinessLayer.SearchString;
 using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.Connection;
-using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
@@ -24,8 +24,6 @@ namespace OMControlLibrary
     public partial class ObjectBrowser : ILoadData 
     {
         #region Private Member Variables
-
-        ConnParams  recentConnectioParam;
     
         dbTreeView dbAssemblyTreeView;
 	
@@ -658,9 +656,6 @@ namespace OMControlLibrary
                             OMEInteraction.SaveFavourite( Fav);
                         }
                         break;
-                    default:
-                        break;
-
                 }
             }
             catch (Exception oEx)
@@ -1071,15 +1066,18 @@ namespace OMControlLibrary
                 }
                 else
                 {
-                    if (Helper.ClassName != null)
+                    if (!GetRootNode(node).Tag.ToString().Equals("Fav Folder"))
                     {
-                        if (!Helper.ClassName.Equals(node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0]))
+                        if (Helper.ClassName != null)
                         {
-                            Helper.ClassName = node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
+                            if (!Helper.ClassName.Equals(node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0]))
+                            {
+                                Helper.ClassName = node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
+                            }
                         }
+                        else
+                            Helper.ClassName = node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
                     }
-                    else
-                        Helper.ClassName = node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
 
                     dbtreeviewObject.SelectedNode = node;
                 }
@@ -1092,7 +1090,18 @@ namespace OMControlLibrary
             }
         }
 
-        /// <summary>
+        private TreeNode GetRootNode(TreeNode node)
+        {
+            while (node.Parent != null)
+            {
+                node = node.Parent;
+            }
+
+            return node;
+        }
+
+
+	    /// <summary>
         /// Switch between Assembly/Class View 
         /// </summary>
         private void ShowAssemblyTreeView()

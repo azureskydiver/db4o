@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OManager.DataLayer.Connection;
+
 
 namespace OManager.DataLayer.QueryParser
 {

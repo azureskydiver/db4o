@@ -149,15 +149,10 @@ namespace OMControlLibrary.Common
 		{
 			get
 			{
-				RecentQueries recQueries = OMEInteraction.GetCurrentRecentConnection();  
-				if (recQueries != null)
+                ConnectionDetails currConnectionDetails = OMEInteraction.GetRefreshedCurrentRecentConnection();  
+				if (currConnectionDetails != null)
 				{
-					m_listOMQueries = recQueries.QueryList;
-				}
-				if (m_listOMQueries != null)
-				{
-					CompareQueryTimestamps comp = new CompareQueryTimestamps();
-					m_listOMQueries.Sort(comp);
+					m_listOMQueries = currConnectionDetails.QueryList;
 				}
 				return m_listOMQueries;
 				
@@ -229,13 +224,11 @@ namespace OMControlLibrary.Common
 			return classGUID;
 		}
 
-		public static void PopulateRecentQueryComboBox(List<OMQuery> qrylist, ComboBox comboboxRecentQueries)
+		public static void PopulateRecentQueryComboBox(ComboBox comboboxRecentQueries)
 		{
-			DataTable recentQueriesDatatable;
-
-			try
+		    try
 			{
-				recentQueriesDatatable = new DataTable();
+				DataTable recentQueriesDatatable = new DataTable();
 				recentQueriesDatatable.Columns.Add(RECENT_QUERY_QUERY_COLUMN, typeof(string));
 				recentQueriesDatatable.Columns.Add(RECENT_QUERY_OMQUERY_COLUMN, typeof(OMQuery));
 
@@ -253,7 +246,7 @@ namespace OMControlLibrary.Common
                 {
                     if (timeForRecentQueriesCreation > timeforDbCreation)
                     {
-                        foreach (OMQuery qry in qrylist)
+                        foreach (OMQuery qry in ListOMQueries)
                         {
                             if (qry != null)
                             {
@@ -420,10 +413,6 @@ namespace OMControlLibrary.Common
 					OMResultedQuery.Clear();
 
 				QueryResultToolWindow = null;
-
-				if (ListOMQueries != null)
-					ListOMQueries.Clear();
-			
 				Tab_index = 0;
 				ListofModifiedObjects.Instance.Clear();
 			}

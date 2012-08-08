@@ -4,6 +4,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
+using OManager.Business.Config;
 using OManager.DataLayer.CommonDatalayer;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
@@ -181,7 +182,7 @@ namespace OManager.DataLayer.PropertyDetails
             try
             {
             	IObjectInfo objInfo = objectContainer.Ext().GetObjectInfo(m_genObject);
-            	return objInfo != null ? objInfo.GetVersion() : version;
+            	return objInfo != null ? objInfo.GetCommitTimestamp()  : version;
             }
             catch (Exception oEx)
             {

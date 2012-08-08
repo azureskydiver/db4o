@@ -1,32 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using OManager.BusinessLayer.Config;
+using OManager.BusinessLayer.UIHelper;
+
 
 namespace OMControlLibrary
 {
     public partial class ChooseAssemblies : Form
     {
         private const string OPEN_FILE_ADDASSEMBLY_FILTER = "Assemblies(*.exe, *.dll)|*.exe;*.dll";
-        private readonly Config config = Config.Instance;
         private ISearchPath _searchPath;
 
         public ChooseAssemblies(string path)
         {
-          
-            config.DbPath = path;
-            _searchPath = config.AssemblySearchPath;
+            dbInteraction.SetPathForConnection(path);
+            _searchPath = dbInteraction.GetAssemblySearchPath();
             InitializeComponent();
             InitializePaths();
-
         }
-
-
 
         private void InitializePaths()
         {
@@ -49,16 +41,13 @@ namespace OMControlLibrary
             openFileDialog.Filter = OPEN_FILE_ADDASSEMBLY_FILTER;
             openFileDialog.Title = "Add Assemblies";
 
-            if (openFileDialog.ShowDialog() != DialogResult.Cancel)
+            if (openFileDialog.ShowDialog() == DialogResult.Cancel) return;
+            foreach (string path in openFileDialog.FileNames)
             {
-
-                if (_searchPath.Add(openFileDialog.FileName))
+                if (_searchPath.Add(path))
                 {
-
-                    chkListBoxAssemblies.Items.Add(openFileDialog.FileName, CheckState.Checked);
-
+                    chkListBoxAssemblies.Items.Add(path, CheckState.Checked);
                 }
-
             }
         }
 

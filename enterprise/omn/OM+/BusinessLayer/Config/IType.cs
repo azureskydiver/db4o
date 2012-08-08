@@ -1,6 +1,6 @@
 ﻿/* Copyright (C) 2004 - 2009  Versant Inc.  http://www.db4o.com */
 
-namespace OManager.DataLayer.Reflection
+namespace OManager.Business.Config
 {
     public interface IType
     {

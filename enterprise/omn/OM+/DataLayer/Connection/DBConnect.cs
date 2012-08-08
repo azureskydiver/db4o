@@ -8,15 +8,15 @@ namespace OManager.DataLayer.Connection
 {
     class DBConnect
     {
-        IObjectContainer dbConn;
+       
         public string dbConnection(ConnParams login, bool customConfig)
         {
             try
             {
-                Db4oClient.conn = login;
+                Db4oClient.CurrentConnParams  = login;
                 Db4oClient.CustomConfig = customConfig;
-                dbConn = Db4oClient.Client;
-                return Db4oClient.exceptionConnection;
+                IObjectContainer objectContainer = Db4oClient.Client;
+                return Db4oClient.ExceptionConnection;
             }
             catch (Exception oEx)
             {

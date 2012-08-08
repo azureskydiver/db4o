@@ -193,19 +193,19 @@ namespace OMAddin
 					CreateMenu();
 
 
-
+                   
 					try
 					{
-						CommandBars toolBarCommandBars = ((CommandBars)_applicationObject.CommandBars);
-						string toolbarName = Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION);
-						try
-						{
-							omToolbar = toolBarCommandBars.Add(toolbarName, MsoBarPosition.msoBarTop, Type.Missing, false);
-						}
-						catch (ArgumentException)
-						{
-							omToolbar = toolBarCommandBars[toolbarName];
-						}
+                        CommandBars toolBarCommandBars = ((CommandBars)_applicationObject.CommandBars);
+                        string toolbarName = Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION);
+                        try
+                        {
+                            omToolbar = toolBarCommandBars.Add(toolbarName, MsoBarPosition.msoBarTop, Type.Missing, false);
+                        }
+                        catch (ArgumentException)
+                        {
+                            omToolbar = toolBarCommandBars[toolbarName];
+                        }
 						CreateToolBar();
 						omToolbar.Visible = true;
 
@@ -1293,7 +1293,7 @@ namespace OMAddin
 		#region OpenOMEAboutBox
 		private static void OpenOMEAboutBox()
 		{
-			using (AboutOME objectAbout = new AboutOME(Regex.Replace(DataLayerCommon.Db4oVersion, @"(.*?)\s(?<version>.*)", @"${version}")))
+			using (AboutOME objectAbout = new AboutOME(Regex.Replace(DataLayerCommon.Db4o_Version, @"(.*?)\s(?<version>.*)", @"${version}")))
 			{
 				objectAbout.ShowDialog();
 			}

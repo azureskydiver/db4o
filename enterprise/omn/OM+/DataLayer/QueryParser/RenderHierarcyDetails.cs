@@ -5,6 +5,7 @@ using System.Reflection;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
+using OManager.Business.Config;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.QueryRenderer;
 using OManager.DataLayer.CommonDatalayer;

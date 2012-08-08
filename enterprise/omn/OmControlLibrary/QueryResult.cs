@@ -117,7 +117,7 @@ namespace OMControlLibrary
 					}
 
 				}
-				ApplyReadonlyCondition(OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly);
+				ApplyReadonlyCondition(OMEInteraction.GetCurrentConnParams().ConnectionReadOnly);
 			}
 			catch (Exception oEx)
 			{
@@ -256,18 +256,14 @@ namespace OMControlLibrary
                 long id = (long) cell.OwningRow.Tag;
                 string fieldName = masterView.Columns[e.ColumnIndex].HeaderText;
                 object value = cell.Value;
-                if (value != "null" && Validations.ValidateDataType(cell.OwningColumn.Tag.ToString(), fieldName, value))
+                if (!value.ToString().Equals("null") && Validations.ValidateDataType(cell.OwningColumn.Tag.ToString(), fieldName, value))
                 {
                     if (strstoreValue != value.ToString())
                     {
                         if (id != 0)
                         {
                             UpdateMasterViewObjectEditedStatus(masterView.Rows[e.RowIndex], true);
-                            //masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value =
-                            //AssemblyInspectorObject.DataType.CastObject(cell.OwningColumn.Tag.ToString(), fieldName,
-                            //                                                value);
                             AssemblyInspectorObject.DataSave.EditObject(id, fieldName, value);
-
                             AssemblyInspectorObject.DataSave.AddObjectToObjectCache(id);
                             masterView.Rows[e.RowIndex].Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Tag =
                                 fieldName.Split('.').Length;
@@ -580,7 +576,7 @@ namespace OMControlLibrary
 				treeview.EndEdit();
 
 				CancelEventArgs args = e.CancelEventArguments;
-                if (OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly)
+                if (OMEInteraction.GetCurrentConnParams().ConnectionReadOnly)
                 {
                     args.Cancel = true;
                     return;

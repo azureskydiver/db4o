@@ -1,7 +1,8 @@
 ﻿using System;
+using OManager.Business.Config;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.PropertyDetails;
-using OManager.DataLayer.Reflection;
+
 
 namespace OMAddinDataTransferLayer.TypeMauplation
 {

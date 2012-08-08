@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace OManager.BusinessLayer.Login
+namespace OManager.BusinessLayer.FavFolder
 {
     public class FavouriteFolder
     {
@@ -20,8 +20,6 @@ namespace OManager.BusinessLayer.Login
             get { return m_ListClass; }
             set { m_ListClass = value; }
         }
-
-        
 
         public FavouriteFolder(IList<string> lstClass, string folderName)
         {

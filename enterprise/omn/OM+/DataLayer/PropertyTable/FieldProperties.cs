@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Generic;
 using Db4objects.Db4o.Reflect;
+using OManager.Business.Config;
 using OManager.DataLayer.Connection;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.PropertyDetails;
-using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OManager.DataLayer.PropertyTable
@@ -61,16 +61,23 @@ namespace OManager.DataLayer.PropertyTable
             {
 				List<FieldProperties> listFieldProperties = new List<FieldProperties>();
                 ClassDetails clDetails = new ClassDetails(className);
-            	foreach (IReflectField field in clDetails.GetFieldList())
+                IReflectField[] fields = clDetails.GetFieldList();
+                if (fields == null)
                 {
-                    if (!(field is GenericVirtualField ||  field.IsStatic()  ))
-                    {
-                    	FieldProperties fp = FieldPropertiesFor(className, field);
-                    	listFieldProperties.Add(fp);
-                    }
+                    return null;
                 }
-                return listFieldProperties;
-            }
+                
+                    foreach (IReflectField field in clDetails.GetFieldList())
+                    {
+                        if (!(field is GenericVirtualField || field.IsStatic()))
+                        {
+                            FieldProperties fp = FieldPropertiesFor(className, field);
+                            listFieldProperties.Add(fp);
+                        }
+                    }
+                    return listFieldProperties;
+                }
+            
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);

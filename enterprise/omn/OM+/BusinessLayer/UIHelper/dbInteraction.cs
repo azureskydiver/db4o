@@ -2,16 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Db4objects.Db4o.Reflect;
+using OManager.Business.Config;
+using OManager.BusinessLayer.Config;
 using OManager.BusinessLayer.QueryRenderer;
 using OManager.DataLayer.DataProcessing;
-using OManager.DataLayer.Modal;
 using OManager.DataLayer.PropertyDetails;
 using OManager.DataLayer.QueryParser;
 using OManager.DataLayer.Connection;
 using OManager.BusinessLayer.Login;
 using System.Windows.Forms;
 using OManager.DataLayer.Maintanence;
-using OManager.DataLayer.Reflection;
 using OManager.DataLayer.CommonDatalayer;
 using OManager.DataLayer.DemoDBCreation;
 using OME.Logging.Common;
@@ -88,7 +88,30 @@ namespace OManager.BusinessLayer.UIHelper
 			return clsDetails.GetFields();
 		}
 		
-		public static int NoOfObjectsforAClass(string classname)
+        public static void SetPathForConnection(string path)
+        {
+            DataLayer.Connection.Config.Instance.DbPath = path;
+        }
+        public static void SaveAssemblyPath(string path)
+        {
+            if (path != string.Empty)
+                DataLayer.Connection.Config.Instance.SaveAssemblySearchPath(path);
+            DataLayer.Connection.Config.Instance.AssemblySearchPath = null;
+        }
+        
+
+	    public static void SetAssemblyPathtoNull()
+	    {
+            DataLayer.Connection.Config.Instance.AssemblySearchPath = null;
+	        DataLayer.Connection.Config.Instance.DbPath = string.Empty;
+	    }
+
+	    public static ISearchPath GetAssemblySearchPath()
+        {
+            return DataLayer.Connection.Config.Instance.AssemblySearchPath;
+        }
+
+	    public static int NoOfObjectsforAClass(string classname)
 		{
 			ClassDetails db = new ClassDetails(classname);
 			return db.GetNumberOfObjects();
@@ -205,7 +228,7 @@ namespace OManager.BusinessLayer.UIHelper
 		
 
 
-		public static string ConnectoToDB(RecentQueries recConnection, bool customConfig)
+		public static string ConnectoToDB(ConnectionDetails recConnection, bool customConfig)
 		{
 			DBConnect db = new DBConnect();
 			return db.dbConnection(recConnection.ConnParam, customConfig );                     
@@ -223,7 +246,7 @@ namespace OManager.BusinessLayer.UIHelper
 				dbCreationObj.CreateDemoDb(demoFilePath);
 				return true;
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return false;
 			}
@@ -251,7 +274,7 @@ namespace OManager.BusinessLayer.UIHelper
 
 		public static bool CheckReadonlyStatus()
 		{
-			return Db4oClient.CurrentRecentConnection.ConnParam.ConnectionReadOnly;
+			return Db4oClient.CurrentConnParams.ConnectionReadOnly;
 		}
 	}
 }
