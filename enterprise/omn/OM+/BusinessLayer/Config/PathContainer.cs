@@ -23,19 +23,19 @@ namespace OManager.BusinessLayer.Config
 				_searchPath = value;	
 			}
 		}
-        public ConnParams ConnParam
+        public string ConnectionPath
         {
             get
             {
-                return _connParam;
+                return _connectionPath ;
             }
 
             set
             {
-                _connParam = value;
+                _connectionPath = value;
             }
         }
 		private ISearchPath _searchPath;
-        private ConnParams _connParam;
+        private string _connectionPath;
 	}
 }

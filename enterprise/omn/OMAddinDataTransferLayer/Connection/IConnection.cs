@@ -4,7 +4,7 @@ namespace OMAddinDataTransferLayer.Connection
 {
 	public interface IConnection
 	{
-        string ConnectToDatabase(RecentQueries currRecentQueries, bool customConfig);		
+        string ConnectToDatabase(ConnectionDetails currConnectionDetails, bool customConfig);		
 		Hashtable FetchAllStoredClasses();
 		Hashtable FetchAllStoredClassesForAssembly();
 		Hashtable FetchStoredFields(string nodeName);

@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using OManager.BusinessLayer.Common;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.BusinessLayer.QueryManager
 {
@@ -86,9 +84,9 @@ namespace OManager.BusinessLayer.QueryManager
         }
     }
    
-    public class CompareQueryTimestamps : IComparer<OMQuery>
+    internal class CompareQueryTimestamps : IComparer<OMQuery>
     {
-        public int Compare(OMQuery q1, OMQuery q2)
+        public   int Compare(OMQuery q1, OMQuery q2)
         {
             
                 return q2.QueryTimestamp.CompareTo(q1.QueryTimestamp);

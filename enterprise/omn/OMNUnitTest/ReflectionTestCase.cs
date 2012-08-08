@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Db4objects.Db4o.Reflect.Net;
 using NUnit.Framework;
+using OManager.Business.Config;
 using OManager.DataLayer.Reflection;
 using Sharpen.Lang;
 using Type=System.Type;

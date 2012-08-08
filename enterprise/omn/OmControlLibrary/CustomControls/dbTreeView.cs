@@ -6,12 +6,9 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OMAddinDataTransferLayer;
-using OMAddinDataTransferLayer.AssemblyInfo;
 using OMAddinDataTransferLayer.TypeMauplation;
-using OManager.BusinessLayer.Login;
+using OManager.BusinessLayer.FavFolder;
 using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.Connection;
-using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OMControlLibrary.Common
@@ -210,7 +207,7 @@ namespace OMControlLibrary.Common
 		{
             try
             {
-                string nodeName = null;
+               
                 TreeNode tNode = ((TreeNode) e.Item);
                 tNode.TreeView.SelectedNode = tNode;
                 ((TreeNode) e.Item).TreeView.SelectedNode = tNode;
@@ -307,9 +304,6 @@ namespace OMControlLibrary.Common
 						{
 							SelectedNode = treenode;
 							ContextMenuStrip = null;
-							List<string> list = null;
-							//QueryBuilder queryBuilder = QueryBuilder.Instance;
-
                             if (treenode.Tag != null && treenode.Tag.ToString() != "Fav Folder")
                             {
                                 if (m_hashtableClassNodes.Contains(treenode.Name) ||
@@ -457,11 +451,6 @@ namespace OMControlLibrary.Common
 		{
             try
             {
-
-
-
-
-
 				long TimeforFavCreation =
 				   OMEInteraction.GetTimeforFavCreation();
             	long TimeforDbCreation = AssemblyInspectorObject.Connection.DbCreationTime();
@@ -826,6 +815,7 @@ namespace OMControlLibrary.Common
 						MessageBox.Show("The Foldername already exist, Please use some other name.",
 						                Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK, MessageBoxIcon.Error);
 						e.CancelEdit = true;
+					    return;
 					}
 				}
 				else if (e.Label == string.Empty)
@@ -833,12 +823,16 @@ namespace OMControlLibrary.Common
 					MessageBox.Show("The Foldername cannot be empty.", Helper.GetResourceString(Constants.PRODUCT_CAPTION),
 					                MessageBoxButtons.OK, MessageBoxIcon.Error);
 					e.CancelEdit = true;
+				    return;
 				}
 				if (e.Node.Text != folderName)
 				{
-					FavouriteFolder oldfav = new FavouriteFolder(null, folderName);
-					FavouriteFolder newFav = new FavouriteFolder(null, e.Node.Text);
-					OMEInteraction.RenameFolderInDatabase(oldfav, newFav);
+				    FavouriteFolder fav= OMEInteraction.GetFolderfromDatabaseByFoldername(folderName);
+                    FavouriteFolder newFav = new FavouriteFolder(null, e.Node.Text);
+                    if (fav != null)
+                        OMEInteraction.RenameFolderInDatabase(fav, newFav);
+                    else
+                        OMEInteraction.SaveFavourite(newFav);
 				}
 				else
 				{
@@ -1029,11 +1023,6 @@ namespace OMControlLibrary.Common
 			{
 				EndUpdate();
 			}
-		}
-
-		protected override void OnAfterSelect(TreeViewEventArgs e)
-		{
-			base.OnAfterSelect(e);
 		}
 
 

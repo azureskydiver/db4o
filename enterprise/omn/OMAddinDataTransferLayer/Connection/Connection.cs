@@ -2,19 +2,19 @@
 using System.Collections;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.Connection;
-using OManager.DataLayer.Modal;
 using OME.Logging.ExceptionLogging;
 using OME.Logging.Tracing;
+using OManager.DataLayer.Connection;
+using OManager.DataLayer.DBInfo;
 
 namespace OMAddinDataTransferLayer.Connection
 {
 
     public class Connection : MarshalByRefObject, IConnection
     {
-        public string ConnectToDatabase(RecentQueries currRecentQueries, bool checkCustomConfig)
+        public string ConnectToDatabase(ConnectionDetails currConnectionDetails, bool checkCustomConfig)
         {
-            string exceptionString = dbInteraction.ConnectoToDB(currRecentQueries, checkCustomConfig);
+            string exceptionString = dbInteraction.ConnectoToDB(currConnectionDetails, checkCustomConfig);
 
             try
             {

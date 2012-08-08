@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using Db4objects.Db4o.Reflect;
+using OManager.Business.Config;
 
 namespace OManager.DataLayer.Reflection
 {

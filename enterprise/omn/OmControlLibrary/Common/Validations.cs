@@ -2,7 +2,6 @@ using System;
 using System.Windows.Forms;
 using OMAddinDataTransferLayer;
 using OMAddinDataTransferLayer.TypeMauplation;
-using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OMControlLibrary.Common

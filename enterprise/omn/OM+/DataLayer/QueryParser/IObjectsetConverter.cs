@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
+using OManager.Business.Config;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OManager.BusinessLayer.Common;

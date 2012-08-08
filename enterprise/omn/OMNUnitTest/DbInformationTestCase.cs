@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using OManager.DataLayer.Modal;
+using OManager.DataLayer.DBInfo;
 using Sharpen.Lang;
 
 namespace OMNUnitTest

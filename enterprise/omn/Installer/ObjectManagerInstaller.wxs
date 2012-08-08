@@ -22,6 +22,10 @@
 									  Name="Db4objects.Db4o.dll" 
 									  Source="@dir.omn.output@\Db4objects.Db4o.dll" DiskId="1" Vital="yes" />					  
 							  
+								<File Id="Db4objects.Db4o.Linq.id" 
+									  Name="Db4objects.Db4o.Linq.dll" 
+									  Source="@dir.omn.output@\Db4objects.Db4o.Linq.dll" DiskId="1" Vital="yes" />
+									  
 								<File Id="Db4objects.Db4o.Optional.id" 
 									  Name="Db4objects.Db4o.Optional.dll" 
 									  Source="@dir.omn.output@\Db4objects.Db4o.Optional.dll" DiskId="1" Vital="yes" />

@@ -22,7 +22,7 @@ namespace OMNUnitTest
 			IObjectContainer client = Db4oClient.Client;
 			if (null != client)
 			{
-				string connection = Db4oClient.conn.Connection;
+				string connection = Db4oClient.CurrentConnParams .Connection;
 				Db4oClient.CloseConnection();
 				File.Delete(connection);
 			}
@@ -39,18 +39,15 @@ namespace OMNUnitTest
 		private void GenerateDatabase()
 		{
 			string databaseFile = Path.GetTempFileName();
-			Db4oClient.conn = new ConnParams(databaseFile,false);
-			RecentQueries currRecentQueries = new RecentQueries(Db4oClient.conn);
-			Db4oClient.CurrentRecentConnection = currRecentQueries;
-
+			Db4oClient.CurrentConnParams  = new ConnParams(databaseFile,false);
 			Store();
 		}
 		
 		protected void Reopen()
 		{
-			string connection = Db4oClient.conn.Connection;
+			string connection = Db4oClient.CurrentConnParams.Connection;
 			Db4oClient.CloseConnection();
-			Db4oClient.conn = new ConnParams(connection,false);
+            Db4oClient.CurrentConnParams = new ConnParams(connection, false);
 		}
 		
 		protected static void Store(object obj)

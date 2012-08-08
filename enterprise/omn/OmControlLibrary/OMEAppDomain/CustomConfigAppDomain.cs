@@ -35,7 +35,6 @@ namespace OMControlLibrary.OMEAppDomain
 
         public bool LoadAppDomain(ISearchPath searchPath)
         {
-
             try
             {
                 if (customConfigAssemblyInspector == null)

@@ -12,7 +12,7 @@ namespace OMNTest
         public void Run()
         {
             File.Delete(FILE);
-            IObjectContainer objectContainer = Db4oFactory.OpenFile(FILE);
+            IObjectContainer objectContainer = Db4oEmbedded.OpenFile(FILE);
             Store(objectContainer);
             objectContainer.Close();
         }

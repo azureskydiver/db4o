@@ -4,18 +4,18 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
-using OManager.BusinessLayer.Common;
+using OManager.Business.Config;
 using OManager.DataLayer.Connection;
 using OME.Logging.Common;
-using OManager.DataLayer.Reflection;
 
 namespace OManager.DataLayer.CommonDatalayer
 {
     public class DataLayerCommon
     {
-        public static string Db4oVersion
+        public static string Db4o_Version
         {
-            get { return Db4oFactory.Version(); }
+
+            get { return Db4oVersion.Name; }
         }
 
         public static IReflectField GetDeclaredFieldInHeirarchy(IReflectClass aClass, string attribute)
@@ -24,6 +24,8 @@ namespace OManager.DataLayer.CommonDatalayer
             {
                 while (aClass != null)
                 {
+                    
+                    
                     IReflectField refField = GetDeclaredField(aClass, attribute);
                     if (refField != null)
                         return refField;

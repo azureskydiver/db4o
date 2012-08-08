@@ -14,7 +14,7 @@ using OManager.BusinessLayer.Login;
 using Microsoft.VisualStudio.CommandBars;
 using OME.Logging.Common;
 using Constants = OMControlLibrary.Common.Constants;
-using OManager.BusinessLayer.Config;
+
 
 namespace OMControlLibrary
 {
@@ -36,7 +36,7 @@ namespace OMControlLibrary
 		private static Assembly m_AddIn_Assembly;
 		//Private variables
 		
-		private IList<RecentQueries> m_ListrecentConnections;
+		private IList<ConnectionDetails> m_ListrecentConnections;
 		//Constants
 
         private const string IMAGE_DISCONNECT = "OMAddin.Images.DB_DISCONNECT2_a.GIF";
@@ -140,7 +140,7 @@ namespace OMControlLibrary
 		{
 			ClearPanelControls();
 			ShowAppropriatePanel(true);
-			m_ListrecentConnections = OMEInteraction.FetchRecentQueries(false);
+			m_ListrecentConnections = OMEInteraction.FetchAllConnections(false);
 			if (m_ListrecentConnections != null)
 			{
 				PopulateConnections(m_ListrecentConnections);
@@ -199,29 +199,26 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void PopulateConnections(IList<RecentQueries> listConnections)
+		private void PopulateConnections(IList<ConnectionDetails> listConnections)
 		{
 			try
 			{
 				if (listConnections != null && listConnections.Count > 0)
 				{
 
-					CompareTimestamps comparator = new CompareTimestamps();
-					((List< RecentQueries >)listConnections).Sort(comparator);
-
 					comboBoxFilePath.Items.Clear();
-					comboBoxFilePath.Items.Add(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT));
-					foreach (RecentQueries recentQuery in listConnections)
+					comboBoxFilePath.Items.Add(Helper.GetResourceString(Constants.COMBOBOX_DEFAULT_TEXT));
+					foreach (ConnectionDetails connectionDetails in listConnections)
 					{
-						if (recentQuery.ConnParam.Host == null)
-							comboBoxFilePath.Items.Add(new ComboItem(recentQuery.ConnParam.Connection, recentQuery.ConnParam.ConnectionReadOnly,recentQuery.CustomConfigAssemblyPath ));
+						if (connectionDetails.ConnParam.Host == null)
+							comboBoxFilePath.Items.Add(new ComboItem(connectionDetails.ConnParam.Connection, connectionDetails.ConnParam.ConnectionReadOnly,connectionDetails.CustomConfigAssemblyPath ));
                             
 						else
 						{
-							comboBoxFilePath.Items.Add(new ComboItem(recentQuery.ConnParam.Connection,false,recentQuery.CustomConfigAssemblyPath   ));
-							textBoxHost.Text = recentQuery.ConnParam.Host;
-							textBoxPort.Text = recentQuery.ConnParam.Port.ToString();
-							textBoxUserName.Text = recentQuery.ConnParam.UserName;
+							comboBoxFilePath.Items.Add(new ComboItem(connectionDetails.ConnParam.Connection,false,connectionDetails.CustomConfigAssemblyPath   ));
+							textBoxHost.Text = connectionDetails.ConnParam.Host;
+							textBoxPort.Text = connectionDetails.ConnParam.Port.ToString();
+							textBoxUserName.Text = connectionDetails.ConnParam.UserName;
 							textBoxPassword.Focus();
 						}
 					   
@@ -262,7 +259,7 @@ namespace OMControlLibrary
 				if (radioButtonLocal.Checked)
 				{
 					
-					PopulateConnections(OMEInteraction.FetchRecentQueries(false));
+					PopulateConnections(OMEInteraction.FetchAllConnections(false));
 					panelLocal.Visible = true;
 					panelRemote.Visible = false;
 				}
@@ -270,7 +267,7 @@ namespace OMControlLibrary
 				{
 					
 				
-					PopulateConnections(OMEInteraction.FetchRecentQueries(true));
+					PopulateConnections(OMEInteraction.FetchAllConnections(true));
 					panelLocal.Visible = false;
 					panelRemote.Visible = true;
 					
@@ -296,11 +293,13 @@ namespace OMControlLibrary
 				openFileDialog.Title = Helper.GetResourceString(Constants.LOGIN_OPEN_FILE_DIALOG_CAPTION);
 				if (openFileDialog.ShowDialog() != DialogResult.Cancel)
 				{
+				    dbInteraction.SetAssemblyPathtoNull();
 					textBoxConnection.Text = openFileDialog.FileName;
 					toolTipForTextBox.SetToolTip(textBoxConnection, textBoxConnection.Text);
 					if (comboBoxFilePath.Items.Contains(textBoxConnection.Text))
 						comboBoxFilePath.SelectedItem = textBoxConnection.Text;
 				    txtCustomConfigAssemblyPath.Clear();
+				    
 				}
 
 			}
@@ -336,17 +335,11 @@ namespace OMControlLibrary
                                               textBoxPassword.Text.Trim(), Convert.ToInt32(textBoxPort.Text.Trim()));
 
                 }
-
-                Config.Instance.DbPath = conparam.Connection;
+                dbInteraction.SetPathForConnection(conparam.Connection);
                 CheckCustomConfig();
 
                 if (CreateAppDomain())
-                {
                     ConnectAfterCreatingNewAppDomain(conparam);
-                }
-
-
-
             }
             catch (Exception oEx)
             {
@@ -354,45 +347,47 @@ namespace OMControlLibrary
             }
 		}
 
-	    private void ConnectAfterCreatingNewAppDomain(ConnParams conparam)
-	    {
-	        RecentQueries currRecentQueries = new RecentQueries(conparam);
-	        RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
-	        if (tempRecentQueries != null)
-	        {
-	            currRecentQueries = tempRecentQueries;
-	            currRecentQueries.ConnParam.ConnectionReadOnly = chkReadOnly.Checked;
-	           
-	        }
-            currRecentQueries.CustomConfigAssemblyPath = txtCustomConfigAssemblyPath.Text.Trim();
-            string exceptionString = AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentQueries, checkCustomConfig);
+        private void ConnectAfterCreatingNewAppDomain(ConnParams conparam)
+        {
+            ConnectionDetails currConnectionDetails = new ConnectionDetails(conparam);
+            long id = OMEInteraction.ChkIfRecentConnIsInDb(conparam);
+            if (id > 0)
+            {
+                currConnectionDetails = OMEInteraction.GetConnectionDetailsObject(id);
+                if (currConnectionDetails != null)
+                    currConnectionDetails.ConnParam.ConnectionReadOnly = chkReadOnly.Checked;
+            }
 
-	        if (exceptionString == string.Empty)
-	        {
-	            SaveConnectionAndCreateToolWindows(currRecentQueries);
+            currConnectionDetails.CustomConfigAssemblyPath = txtCustomConfigAssemblyPath.Text.Trim();
+            string exceptionString = AssemblyInspectorObject.Connection.ConnectToDatabase(currConnectionDetails,
+                                                                                          checkCustomConfig);
 
-	            CreateQueryBuilderToolWindow();
-	        }
-	        else
-	        {
-	            AssemblyInspectorObject.Connection.Closedb();
-	            textBoxConnection.Clear();
-	            MessageBox.Show(exceptionString,
-	                            Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
-	                            MessageBoxButtons.OK,
-	                            MessageBoxIcon.Error);
+            if (exceptionString == string.Empty)
+            {
+                SaveConnectionAndCreateToolWindows(currConnectionDetails);
+                CreateQueryBuilderToolWindow();
+            }
+            else
+            {
+                AssemblyInspectorObject.Connection.Closedb();
+                textBoxConnection.Clear();
+                MessageBox.Show(exceptionString,
+                                Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                 AppDomain.Unload(appDomain.workerAppDomain);
-	        }
-	    }
+                dbInteraction.SetAssemblyPathtoNull();
+            }
+        }
 
-	    private void SaveConnectionAndCreateToolWindows(RecentQueries currRecentQueries)
+
+	    private void SaveConnectionAndCreateToolWindows(ConnectionDetails currConnectionDetails)
 	    {
-	        OMEInteraction.SetCurrentRecentConnection(currRecentQueries);
-	        OMEInteraction.SaveRecentConnection(currRecentQueries);
-	        Config.Instance.SaveAssemblySearchPath(currRecentQueries.ConnParam.Connection);
-	        Config.Instance.AssemblySearchPath = null;
+	        OMEInteraction.SetCurrentRecentConnection(currConnectionDetails.ConnParam );
+	        OMEInteraction.SaveRecentConnection(currConnectionDetails);
+	        dbInteraction.SaveAssemblyPath(currConnectionDetails.ConnParam.Connection);
 	        AfterSuccessfullyConnected();
-
+            dbInteraction.SetAssemblyPathtoNull();
 	        loginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
 	        Helper.CheckIfLoginWindowIsVisible = false;
 	        ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
@@ -414,7 +409,6 @@ namespace OMControlLibrary
 
                 else
                 {
-                  
                     checkCustomConfig = CreateCustomConfigAppDomain();
                     if (!checkCustomConfig)
                     {
@@ -430,7 +424,7 @@ namespace OMControlLibrary
 	    public bool CreateAppDomain()
         {
            appDomain = new AppDomainDetails();
-            bool check= appDomain.LoadAppDomain(Config.Instance.AssemblySearchPath);
+           bool check = appDomain.LoadAppDomain(dbInteraction.GetAssemblySearchPath());
             if (checkCustomConfig)
                 appDomain.LoadAppDomain(txtCustomConfigAssemblyPath.Text.Trim());
             return check;
@@ -438,17 +432,15 @@ namespace OMControlLibrary
 
 	    public bool CreateCustomConfigAppDomain()
         {
-           
             customConfigAppDomain = new CustomConfigAppDomain(radioButtonLocal.Checked  );
-            customConfigAppDomain.LoadAppDomain(Config.Instance.AssemblySearchPath);
+            customConfigAppDomain.LoadAppDomain(dbInteraction.GetAssemblySearchPath()  );
 	        return customConfigAppDomain.LoadAppDomain(txtCustomConfigAssemblyPath.Text.Trim());
-
         }
+
 	    private void comboBoxFilePath_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			try
 			{
-               
 				if (radioButtonRemote.Checked)
 				{
 					if (!comboBoxFilePath.Text.Equals(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT)))
@@ -486,7 +478,6 @@ namespace OMControlLibrary
 						textBoxConnection.Clear();
 						chkReadOnly.Checked = false;
 					}
-					
 				}
 			}
 			catch (Exception oEx)
@@ -589,7 +580,7 @@ namespace OMControlLibrary
 
         private void btnAddAssemblies_Click(object sender, EventArgs e)
         {
-            Config.Instance.AssemblySearchPath = null;
+            dbInteraction.SetAssemblyPathtoNull();
             if(radioButtonLocal.Checked  )
             new ChooseAssemblies(textBoxConnection.Text.Trim()).Show();
             else

@@ -5,13 +5,9 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using OMAddinDataTransferLayer;
-using OMAddinDataTransferLayer.AssemblyInfo;
 using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
-using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.Connection;
-using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
 
@@ -1334,7 +1330,7 @@ namespace OMControlLibrary.Common
         private static string FullyQualifiedClassNameFor(TreeNode node)
         {
 			ProxyType  type = AssemblyInspectorObject.DataType.ResolveType(node.Tag.ToString()); 
-            return type == null ? (node.Parent != null ? node.Parent.Name : node.Text) : type.FullName;
+            return type == null ? (node.Parent != null && !node.Parent.Tag.ToString().Equals("Fav Folder")  ? node.Parent.Name : node.Text) : type.FullName;
         }
 
 	    internal bool AddAllItemsOfClassToQueryBuilder(TreeNode tempTreeNode, QueryBuilder queryBuilder)

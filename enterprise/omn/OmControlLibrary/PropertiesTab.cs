@@ -2,22 +2,13 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using EnvDTE;
 using OMAddinDataTransferLayer;
-using OMAddinDataTransferLayer.Connection;
 using OMAddinDataTransferLayer.DataBaseDetails;
 using OMAddinDataTransferLayer.TypeMauplation;
-using OMControlLibrary.OMEAppDomain;
-using OMCustomConfigImplementation;
-using OManager.BusinessLayer.Config;
 using OManager.BusinessLayer.Login;
-using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.Connection;
-using OManager.DataLayer.PropertyTable;
-using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -147,11 +138,11 @@ namespace OMControlLibrary
 
 				if (Helper.ClassName != null)
 				{
-					if (OMEInteraction.GetCurrentRecentConnection() != null)
+					if (OMEInteraction.GetCurrentConnParams() != null)
 					{
-						if (OMEInteraction.GetCurrentRecentConnection().ConnParam != null)
+						if (OMEInteraction.GetCurrentConnParams() != null)
 						{
-							buttonSaveIndex.Enabled = !OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly &&
+							buttonSaveIndex.Enabled = !OMEInteraction.GetCurrentConnParams().ConnectionReadOnly &&
                                                     !AssemblyInspectorObject.Connection.CheckForClientServer()   ; 
 
 							labelNoOfObjects.Text = "Number of objects : " +
@@ -291,7 +282,7 @@ namespace OMControlLibrary
 			else if (Helper.Tab_index.Equals(1))
 			{
 				DisplayClassProperties();
-                buttonSaveIndex.Enabled = !OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly && !AssemblyInspectorObject.Connection.CheckForClientServer();    
+                buttonSaveIndex.Enabled = !OMEInteraction.GetCurrentConnParams().ConnectionReadOnly && !AssemblyInspectorObject.Connection.CheckForClientServer();    
 			}
 			else if (Helper.Tab_index.Equals(2))
 			{
@@ -375,7 +366,7 @@ namespace OMControlLibrary
 
 				CloseQueryResultToolWindows();
 
-				conparam = OMEInteraction.GetCurrentRecentConnection().ConnParam;
+				conparam = OMEInteraction.GetCurrentConnParams();
 			    OMEInteraction.CloseOMEdb();
                 customConfig = AssemblyInspectorObject.Connection.CheckForCustomConfig();   
 				AssemblyInspectorObject.Connection.Closedb();
@@ -389,23 +380,31 @@ namespace OMControlLibrary
             }
             try
             {
-                RecentQueries currRecentConnection = new RecentQueries(conparam);
-                RecentQueries tempRc = currRecentConnection.ChkIfRecentConnIsInDb();
-                if (tempRc != null)
-                    currRecentConnection = tempRc;
-                currRecentConnection.Timestamp = DateTime.Now;
+                ConnectionDetails currConnectionDetails = new ConnectionDetails(conparam);
+                 long id = OMEInteraction.ChkIfRecentConnIsInDb();
+                 if (id > 0)
+                 {
+                     ConnectionDetails tempConnectionDetails = OMEInteraction.GetConnectionDetailsObject(id);
+
+                     if (tempConnectionDetails != null)
+                         currConnectionDetails = tempConnectionDetails;
+                     currConnectionDetails.Timestamp = DateTime.Now;
 
 
-                AssemblyInspectorObject.Connection.ConnectToDatabase(currRecentConnection, customConfig);
-                OMEInteraction.SetCurrentRecentConnection(currRecentConnection);
+                     AssemblyInspectorObject.Connection.ConnectToDatabase(currConnectionDetails, customConfig);
+                     OMEInteraction.SetCurrentRecentConnection(currConnectionDetails.ConnParam );
 
-                if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
-                    ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbAssemblyTreeView.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbAssemblyTreeView);
-                else
-                    ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbtreeviewObject.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbtreeviewObject);
+                     if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
+                         ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(
+                             ObjectBrowser.Instance.DbAssemblyTreeView.Nodes[0], saveIndexInstance.Classname,
+                             ObjectBrowser.Instance.DbAssemblyTreeView);
+                     else
+                         ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(
+                             ObjectBrowser.Instance.DbtreeviewObject.Nodes[0], saveIndexInstance.Classname,
+                             ObjectBrowser.Instance.DbtreeviewObject);
 
-                tabStripProperties.SelectedItem = tabItemClassProperties;
-
+                     tabStripProperties.SelectedItem = tabItemClassProperties;
+                 }
             }
             catch (Exception Ex)
             {

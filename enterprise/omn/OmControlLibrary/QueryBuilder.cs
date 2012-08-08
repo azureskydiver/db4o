@@ -11,11 +11,8 @@ using Microsoft.VisualStudio.CommandBars;
 using OMAddinDataTransferLayer;
 using OMAddinDataTransferLayer.TypeMauplation;
 using OManager.BusinessLayer.Common;
-using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.Connection;
-using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -191,7 +188,7 @@ namespace OMControlLibrary
 		{
 			if (GotFocus.Caption == Constants.QUERYBUILDER )
 			{
-				if (AssemblyInspectorObject.Connection.DbConnectionStatus())
+                if (AssemblyInspectorObject.Connection!=null && AssemblyInspectorObject.Connection.DbConnectionStatus())
 				{
 					PropertiesTab.Instance.ShowObjectPropertiesTab = false;
 					PropertiesTab.Instance.ShowClassProperties = true;
@@ -794,7 +791,7 @@ namespace OMControlLibrary
 				comboboxRecentQueries.DataSource = null;
 				if (comboboxRecentQueries != null)
 					comboboxRecentQueries.Items.Clear();
-				Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
+				Helper.PopulateRecentQueryComboBox(comboboxRecentQueries);
 
 			}
 			catch (Exception oEx)
@@ -976,10 +973,11 @@ namespace OMControlLibrary
 		{
             try
             {
+                comboboxRecentQueries.Items.Clear();  
                 comboboxRecentQueries.Items.Add(Helper.GetResourceString(Constants.COMBOBOX_DEFAULT_TEXT));
                 comboboxRecentQueries.SelectedIndex = 0;
                 comboboxRecentQueries.DropdownItemSelected += comboboxRecentQueries_DropdownItemSelected;
-
+                Helper.PopulateRecentQueryComboBox(comboboxRecentQueries);
             }
             catch (Exception oEx)
             {
@@ -993,19 +991,15 @@ namespace OMControlLibrary
 		/// <param name="query"></param>
 		private static void AddQueryToCurrentConnection(OMQuery query)
 		{
-			try
-			{
-				if (!string.IsNullOrEmpty(query.QueryString))
-				{
-					RecentQueries currentConnection = OMEInteraction.GetCurrentRecentConnection();
-					currentConnection.AddQueryToList(query);
-					
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
+            try
+            {
+                if (!string.IsNullOrEmpty(query.QueryString))
+                    OMEInteraction.AddQueriesToList(query);
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
 		}
 
 		/// <summary>

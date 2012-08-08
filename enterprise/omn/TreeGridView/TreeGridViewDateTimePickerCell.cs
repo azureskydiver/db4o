@@ -121,16 +121,10 @@ namespace OME.AdvancedDataGridView
 
         public void FillBoolColumnValue(DataGridViewComboBoxEditingControl ctrl)
         {
-            try
-            {
-                ctrl.Items.Clear();
-                ctrl.Items.AddRange(new object[] { "True" , "False" });
-                ctrl.SelectedIndex = 0;
-            }
-            catch (Exception oEx)
-            {
-               // LoggingHelper.ShowMessage(oEx);
-            }
+            ctrl.Items.Clear();
+            ctrl.Items.AddRange(new object[] {"True", "False"});
+            ctrl.SelectedIndex = 0;
+
         }
 
         #endregion Override methods

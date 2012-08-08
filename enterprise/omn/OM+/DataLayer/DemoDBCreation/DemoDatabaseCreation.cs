@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using OManager.BusinessLayer.FavFolder;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using Db4objects.Db4o;
 using System.Collections;
@@ -22,12 +24,9 @@ namespace OManager.DataLayer.DemoDBCreation
             }
            
             #region creation
+            IObjectContainer objContainer = Db4oEmbedded.OpenFile(filepath);
 
-           
-            Db4oFactory.Configure().BlockSize(8);
-            IObjectContainer objContainer = Db4oFactory.OpenFile(filepath);
-
-            for (int i = 0; i < 75; i++)
+            for (int i = 0; i < 7; i++)
             {
                 try
                 {
@@ -86,7 +85,7 @@ namespace OManager.DataLayer.DemoDBCreation
 
                 catch { }
             }
-            for (int i = 0; i < 75; i++)
+            for (int i = 0; i < 7; i++)
             {
                 try
                 {
@@ -143,7 +142,7 @@ namespace OManager.DataLayer.DemoDBCreation
             }
 
             objContainer.Close();
-            objContainer = null;
+            
             #endregion
 
 			RefreshConnectionData(filepath);
@@ -152,19 +151,17 @@ namespace OManager.DataLayer.DemoDBCreation
     	private void RefreshConnectionData(string filepath)
     	{
     		ConnParams conParams = new ConnParams(filepath, false);
-    		RecentQueries recQueries = new RecentQueries(conParams);
-    		recQueries = recQueries.ChkIfRecentConnIsInDb();
-
-    		if (recQueries != null)
-    		{
-    			FavouriteList favList = new FavouriteList(conParams);
-    			favList.RemoveFavouritFolderForAConnection();
-
-    			GroupofSearchStrings grpSearchString = new GroupofSearchStrings(conParams);
-    			grpSearchString.RemovesSearchStringsForAConnection();
-
-    			recQueries.deleteRecentQueriesForAConnection();
-    		}
+            long id = OMEInteraction.ChkIfRecentConnIsInDb(conParams);
+            if (id > 0)
+            {
+                ConnectionDetails connectionDetails = OMEInteraction.GetConnectionDetailsObject(id);
+                if (connectionDetails != null)
+                {
+                    OMEInteraction.RemoveFavFolder();
+                    OMEInteraction.RemoveSearchString();
+                    OMEInteraction.RemoveRecentQueries();
+                }
+            }
     	}
     }
 }

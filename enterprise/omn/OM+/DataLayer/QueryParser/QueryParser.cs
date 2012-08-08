@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using OManager.Business.Config;
 using OManager.BusinessLayer.QueryManager;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Query;

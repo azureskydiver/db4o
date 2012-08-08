@@ -3,6 +3,7 @@
 using System;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Net;
+using OManager.Business.Config;
 using Sharpen.Lang;
 
 namespace OManager.DataLayer.Reflection

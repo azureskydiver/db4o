@@ -20,7 +20,7 @@ namespace OMControlLibrary.TreeGridViewRendering
 		{
 			InitializeImageList();
 			treegrid = InitializeTreeGridView();
-			bool readOnly=OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly;
+			bool readOnly=OMEInteraction.GetCurrentConnParams().ConnectionReadOnly;
 			ProxyTreeGridRenderer item = AssemblyInspectorObject.DataPopulation.GetTreeGridViewDetails(readOnly,id, classname);
 			TreeGridNode rootNode = new TreeGridNode();
 			treegrid.Nodes.Add(rootNode);
@@ -56,7 +56,7 @@ namespace OMControlLibrary.TreeGridViewRendering
 		{
 			List<ProxyTreeGridRenderer> proxyList =
 				AssemblyInspectorObject.DataPopulation.ExpandTreeGidNode
-					(OMEInteraction.GetCurrentRecentConnection().ConnParam.ConnectionReadOnly,
+					(OMEInteraction.GetCurrentConnParams().ConnectionReadOnly,
 					 node.Tag, activate);
 			if (proxyList == null)
 				return;
