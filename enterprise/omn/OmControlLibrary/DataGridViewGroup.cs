@@ -585,7 +585,6 @@ namespace OMControlLibrary
 		{
 			m_data = data;
 		}
-
 		public DbEventArgs()
 		{
 

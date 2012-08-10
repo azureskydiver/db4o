@@ -7,14 +7,13 @@ namespace OManager.BusinessLayer.FavFolder
     public class FavouriteFolder
     {
         private string m_folderName;
-
         public string FolderName
         {
             get { return m_folderName; }
             set { m_folderName = value; }
         }
-        private IList<string> m_ListClass;
 
+        private IList<string> m_ListClass;
         public IList<string> ListClass
         {
             get { return m_ListClass; }

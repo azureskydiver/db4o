@@ -6,7 +6,6 @@ namespace OManager.Business.Config
     {
         object Cast(object value);
     	void SetField(object onObject, string fieldName, object value);
-
         string DisplayName { get; }
         string FullName { get; }
         bool HasIdentity { get; }

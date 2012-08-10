@@ -28,8 +28,8 @@ namespace OMAddinDataTransferLayer.TypeMauplation
 			IsPrimitive = type.IsPrimitive;
 			IsArray = type.IsArray;
 			IsNullable = type.IsNullable;
-			return this;
-		}
+			return this; 
+        }
 
 	}
 }

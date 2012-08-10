@@ -18,7 +18,6 @@ namespace OMControlLibrary
             {
                 dbInteraction.CreateDemoDb(demoFilePath);
                 ConnParams conparam = new ConnParams(demoFilePath, false);
-
                 ConnectionDetails connectionDetails = new ConnectionDetails(conparam);
                 long id = OMEInteraction.ChkIfRecentConnIsInDb(conparam);
                 if (id > 0)
@@ -33,9 +32,6 @@ namespace OMControlLibrary
                 AssemblyInspectorObject.Connection.ConnectToDatabase(connectionDetails, false);
                 OMEInteraction.SetCurrentRecentConnection(connectionDetails.ConnParam );
                 OMEInteraction.SaveRecentConnection(connectionDetails);
-
-
-
             }
             catch (Exception e)
             {

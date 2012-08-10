@@ -35,7 +35,6 @@ namespace OManager.BusinessLayer.UIHelper
         {
             object obj = GetObjById(id);
             return DataLayerCommon.ReflectClassFor(obj).GetName();
-
         }
 
         public static int GetFieldCount(string classname)

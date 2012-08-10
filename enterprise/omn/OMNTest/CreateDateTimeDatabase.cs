@@ -7,7 +7,6 @@ namespace OMNTest
     class CreateDateTimeDatabase
     {
         static String FILE = "datetime.db4o";
-
         public void Run()
         {
             File.Delete(FILE);

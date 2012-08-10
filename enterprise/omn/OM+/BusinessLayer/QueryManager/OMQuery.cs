@@ -27,7 +27,6 @@ namespace OManager.BusinessLayer.QueryManager
             set { m_queryTimeStamp = value; }
         }
 
-
         public Hashtable AttributeList
         {
             get { return m_attributeList; }

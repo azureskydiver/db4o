@@ -53,9 +53,7 @@ namespace OMControlLibrary
 	    private CustomConfigAppDomain customConfigAppDomain;
 	    private bool checkCustomConfig;
 		#endregion
-
-	
-		public Login()
+        public Login()
 		{
 			InitializeComponent();
 		

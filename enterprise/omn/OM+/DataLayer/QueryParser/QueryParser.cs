@@ -23,15 +23,14 @@ namespace OManager.DataLayer.QueryParser
             objectContainer = Db4oClient.Client;
             m_OmQuery = OmQuery;
         }
-        
+
         public IObjectSet ExecuteOMQueryList()
         {
             try
             {
-                
                 IConstraint ConCatClauses = null;
                 IConstraint buildClause;
-            	IConstraint conCatGroup = null; 
+                IConstraint conCatGroup = null;
 
                 objectContainer = Db4oClient.Client;
                 IQuery query = objectContainer.Query();
@@ -49,11 +48,12 @@ namespace OManager.DataLayer.QueryParser
                     foreach (OMQueryClause qmclause in qmGroup.ListQueryClauses)
                     {
                         clausecount++;
-                        buildClause = FormulateFieldConstraints(query, qmclause);//.Classname, qmclause.Fieldname, qmclause.Value);
+                        buildClause = FormulateFieldConstraints(query, qmclause);
+                            //.Classname, qmclause.Fieldname, qmclause.Value);
                         if (qmclause.Operator != null)
                         {
-                            if (qmclause.FieldType !=  BusinessConstants.DATETIME)
-                                 buildClause = ApplyOperator(buildClause, qmclause.Operator);
+                            if (qmclause.FieldType != BusinessConstants.DATETIME)
+                                buildClause = ApplyOperator(buildClause, qmclause.Operator);
                         }
 
                         if (qmclause.ClauseLogicalOperator == CommonValues.LogicalOperators.OR)
@@ -71,7 +71,7 @@ namespace OManager.DataLayer.QueryParser
 
                             }
                         }
-                        if (qmclause.ClauseLogicalOperator ==CommonValues.LogicalOperators.AND)
+                        if (qmclause.ClauseLogicalOperator == CommonValues.LogicalOperators.AND)
                         {
                             if (buildClause != null)
                             {
@@ -84,13 +84,13 @@ namespace OManager.DataLayer.QueryParser
                                     ConCatClauses = buildClause.And(ConCatClauses);
                                 }
                             }
-                        }      
+                        }
                     }
 
-                	IConstraint buildGroup = ConCatClauses ?? buildClause;
-					if (qmGroup.GroupLogicalOperator != CommonValues.LogicalOperators.EMPTY)
+                    IConstraint buildGroup = ConCatClauses ?? buildClause;
+                    if (qmGroup.GroupLogicalOperator != CommonValues.LogicalOperators.EMPTY)
                     {
-						if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.OR)
+                        if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.OR)
                         {
 
                             if (buildGroup != null)
@@ -98,7 +98,7 @@ namespace OManager.DataLayer.QueryParser
                                 conCatGroup = conCatGroup.Or(buildGroup);
                             }
                         }
-						if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.AND)
+                        if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.AND)
                         {
 
                             if (buildGroup != null)
@@ -110,9 +110,9 @@ namespace OManager.DataLayer.QueryParser
                     else
                     {
                         conCatGroup = buildGroup;
-                    }                   
+                    }
                 }
-                IObjectSet objSet= query.Execute();
+                IObjectSet objSet = query.Execute();
                 return objSet;
             }
             catch (Exception oEx)
@@ -122,7 +122,7 @@ namespace OManager.DataLayer.QueryParser
             }
         }
 
-      
+
         public IConstraint ApplyOperator(IConstraint cons, string db4oOperator)
         {
             try

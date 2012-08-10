@@ -1296,7 +1296,6 @@ namespace OMControlLibrary.Common
 					
 				if (!(itemType.IsEditable &&  (itemType.IsPrimitive || itemType.IsNullable) ) )
 					return false;
-
 				if (tempTreeNode.Parent != null)
 				{
 					className = FullyQualifiedClassNameFor(tempTreeNode.Parent);

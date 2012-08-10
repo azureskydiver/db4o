@@ -13,7 +13,6 @@ namespace OMControlLibrary.Common
 		{
 			if (null == data && "null"==data.ToString() ) 
 				return false  ;
-
 			try
 			{
 				return AssemblyInspectorObject.DataType.ValidateDataType(classname, fieldname , data);

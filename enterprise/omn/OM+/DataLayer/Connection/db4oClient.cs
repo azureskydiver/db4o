@@ -23,11 +23,8 @@ namespace OManager.DataLayer.Connection
         private static IEmbeddedConfiguration EmbeddedConfig { get; set; }
 	    public static string ExceptionConnection { get; set; }
 	    public static TypeResolver TypeResolver { get; private set; }
-
         public static ConnParams CurrentConnParams { get; set; }
-
 	    public static bool CustomConfig { get; set; }
-
 	    public static bool IsConnected { get; set; }
 
 	    public static bool IsClient

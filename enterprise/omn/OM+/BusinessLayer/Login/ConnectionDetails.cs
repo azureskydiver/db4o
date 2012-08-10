@@ -6,7 +6,7 @@ using OManager.BusinessLayer.QueryManager;
 
 namespace OManager.BusinessLayer.Login
 {
-	[Serializable ]
+	[Serializable ] 
     public class ConnectionDetails 
     {
        

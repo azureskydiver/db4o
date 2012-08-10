@@ -356,7 +356,6 @@ namespace OMControlLibrary
 			try
 			{
 				saveIndexInstance = new SaveIndexClass(Helper.ClassName);
-				
 				foreach (DataGridViewRow row in dbGridViewProperties.Rows)
 				{
 					bool boolValue = Convert.ToBoolean(row.Cells[2].Value);

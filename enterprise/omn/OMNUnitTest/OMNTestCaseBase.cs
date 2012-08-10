@@ -35,7 +35,6 @@ namespace OMNUnitTest
 		protected virtual void SetupTest()
 		{
 		}
-
 		private void GenerateDatabase()
 		{
 			string databaseFile = Path.GetTempFileName();

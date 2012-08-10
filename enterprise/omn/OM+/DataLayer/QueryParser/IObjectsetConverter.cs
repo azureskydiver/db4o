@@ -20,7 +20,6 @@ namespace OManager.DataLayer.QueryParser
         private Hashtable m_hashRowContent;
         private readonly IObjectContainer objectContainer;
         private readonly bool m_refresh;
-
         private readonly string m_classname;
 
         public IObjectsetConverter( string classname, bool refresh)

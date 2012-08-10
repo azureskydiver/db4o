@@ -20,7 +20,6 @@ namespace OManager.DataLayer.SearchStringProcessing
         {
             m_connParam = connParam;
         }
-       
 
         internal void AddSearchStringToList(SeachString strToAdd)
         {

@@ -40,7 +40,7 @@
             this.chkListBoxAssemblies.FormattingEnabled = true;
             this.chkListBoxAssemblies.Location = new System.Drawing.Point(12, 12);
             this.chkListBoxAssemblies.Name = "chkListBoxAssemblies";
-            this.chkListBoxAssemblies.Size = new System.Drawing.Size(362, 364);
+            this.chkListBoxAssemblies.Size = new System.Drawing.Size(369, 364);
             this.chkListBoxAssemblies.TabIndex = 0;
             // 
             // btnOk

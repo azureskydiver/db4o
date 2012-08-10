@@ -7,7 +7,7 @@ namespace OMCustomConfigImplementation.UserCustomConfig
     {
         public bool CheckIfCustomConfigImplemented(bool local)
         {
-            return ManageCustomConfig.CheckConfig(local);
+            return ManageCustomConfig.CheckConfig(local); 
         }
     }
 }

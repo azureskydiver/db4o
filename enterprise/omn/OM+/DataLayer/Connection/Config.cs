@@ -14,7 +14,6 @@ namespace OManager.DataLayer.Connection
                 if (_searchPath == null)
                 {
                     _searchPath = LoadSearchPath();
-
                 }
                 return _searchPath;
             }

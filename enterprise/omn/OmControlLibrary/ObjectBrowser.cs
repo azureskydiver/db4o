@@ -1208,7 +1208,6 @@ namespace OMControlLibrary
             {
                 if (!HasItems(listSearchStrings))
                     return;
-
                 if (toolStripComboBoxFilter.SelectedIndex > 1)
                 {
                     toolStripComboBoxFilter.Text = listSearchStrings[toolStripComboBoxFilter.SelectedIndex - 2];

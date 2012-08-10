@@ -24,7 +24,6 @@ namespace OMAddinDataTransferLayer.Connection
             {
                 ex.ToString(); //ignore
             }
-
             try
             {
                 ExceptionHandler.Initialize();

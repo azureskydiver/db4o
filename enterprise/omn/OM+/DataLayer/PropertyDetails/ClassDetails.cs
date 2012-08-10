@@ -45,7 +45,7 @@ namespace OManager.DataLayer.PropertyDetails
 
                 foreach (IReflectField field in rFields)
                 {
-                   if (!FieldList.ContainsKey(field.GetName()))
+                    if (!FieldList.ContainsKey(field.GetName()))
                     {
 
                         FieldList.Add(
@@ -71,7 +71,6 @@ namespace OManager.DataLayer.PropertyDetails
                 IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_className);
                 if (rClass != null)
                 {
-                   
                     IType type = Db4oClient.TypeResolver.Resolve(rClass);
                     if (!type.IsEditable)
                     {

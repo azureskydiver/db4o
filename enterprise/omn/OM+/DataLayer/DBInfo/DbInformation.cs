@@ -13,15 +13,14 @@ namespace OManager.DataLayer.DBInfo
         public static Hashtable StoredClasses()
         {
 			Hashtable storedClassHashtable = new Hashtable();
-        	try
+            try
             {
                 IStoredClass[] storedClasses = Db4oClient.Client.Ext().StoredClasses();
                 foreach (IStoredClass stored in storedClasses)
                 {
                     string className = stored.GetName();
-					if (ExcludeClass(className))
-						continue;
-                	
+                    if (ExcludeClass(className))
+                        continue;
                     storedClassHashtable.Add(className, SimpleName(className));
                 }
             }

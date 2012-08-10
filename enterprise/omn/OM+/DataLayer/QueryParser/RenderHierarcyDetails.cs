@@ -30,9 +30,6 @@ namespace OManager.DataLayer.QueryParser
 			this.readOnly = readOnly;
 			listTreeGridViewRenderers = new List<TreeGridViewRenderer>();
 		}
-
-
-
         public TreeGridViewRenderer GetRootObject(long id, string classname)
         {
             return FillValuesInTreeGridViewRenderer(id, classname);

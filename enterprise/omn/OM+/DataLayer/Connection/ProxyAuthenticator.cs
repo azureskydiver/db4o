@@ -10,7 +10,6 @@ namespace  OManager.DataLayer.Connection
     {
        
         ProxyAuthentication _proxyAuthObj;
-
         public ProxyAuthentication ProxyAuthObj
         {
             get { return _proxyAuthObj; }

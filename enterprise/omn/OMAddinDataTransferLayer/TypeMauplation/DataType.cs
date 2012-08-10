@@ -46,8 +46,8 @@ namespace OMAddinDataTransferLayer.TypeMauplation
                 return false;
             objectType.Cast(data);
             return true;
-
         }
+
 		public ProxyType GetFieldType(string declaringClassName, string name)
 		{
 		    IType type = dbInteraction.GetFieldType(declaringClassName, name);

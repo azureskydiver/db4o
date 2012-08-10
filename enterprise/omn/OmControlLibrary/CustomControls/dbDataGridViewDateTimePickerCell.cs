@@ -42,7 +42,6 @@ namespace OMControlLibrary.Common
 				base.InitializeEditingControl(rowIndex,
 					initialFormattedValue,
 					dataGridViewCellStyle);
-
 				string typeOfValue = string.Empty;
                 ProxyType type = this.Tag as ProxyType;
                 if (type == null || type.IsNullable)

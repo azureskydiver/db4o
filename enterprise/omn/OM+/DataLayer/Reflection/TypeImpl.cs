@@ -24,7 +24,6 @@ namespace OManager.DataLayer.Reflection
         	IReflectField field = _type.GetDeclaredField(fieldName);
 			if (field == null)
 				throw new ArgumentException("No field '" + fieldName + "' found in '" + FullName + "'");
-
 			field.Set(onObject, value);
         }
 

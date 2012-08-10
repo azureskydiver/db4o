@@ -23,7 +23,6 @@ namespace OManager.DataLayer.DataProcessing
             try
             {
                 IObjectContainer objectContainer = Db4oClient.Client;
-
                 if (id == 0)
                     return;
                 object topObject = objectContainer.Ext().GetByID(id);
