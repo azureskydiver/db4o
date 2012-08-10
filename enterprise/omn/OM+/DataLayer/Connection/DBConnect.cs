@@ -13,7 +13,7 @@ namespace OManager.DataLayer.Connection
         {
             try
             {
-                Db4oClient.CurrentConnParams  = login;
+                Db4oClient.CurrentConnParams  = login; 
                 Db4oClient.CustomConfig = customConfig;
                 IObjectContainer objectContainer = Db4oClient.Client;
                 return Db4oClient.ExceptionConnection;

@@ -32,11 +32,9 @@ namespace OManager.DataLayer.PropertyDetails
         }
 		public ObjectDetails(object obj)
 		{
-
 			m_genObject = obj;
-			
-
 		}
+
         public string GetUUID()
         {
             try

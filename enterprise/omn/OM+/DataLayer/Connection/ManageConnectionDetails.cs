@@ -46,36 +46,35 @@ namespace OManager.DataLayer.Connection
             }
         }
 
-	    internal void AddQueryToList(OMQuery query)
+        internal void AddQueryToList(OMQuery query)
         {
-			try
-			{
-			      
-			        long id = ChkIfRecentConnIsInDb();
-			        if (id > 0)
-			        {
-			            ConnectionDetails temprc = Db4oClient.OMNConnection.Ext().GetByID(id) as ConnectionDetails;
-			            Db4oClient.OMNConnection.Ext().Activate(temprc, 5);
-			            MaintainCountofTwentyforQueries(temprc);
-			            MaintainCountofFiveForQueries(query, temprc);
-			            if (temprc != null)
-			            {
-			                temprc.Timestamp = DateTime.Now;
-			                temprc.QueryList.Add(query);
-			            }
-			            Db4oClient.OMNConnection.Ext().Store(temprc, 5);
-			            Db4oClient.OMNConnection.Commit();
-			        }
-			   
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.HandleException(oEx);
-			}
+            try
+            {
+                long id = ChkIfRecentConnIsInDb();
+                if (id > 0)
+                {
+                    ConnectionDetails temprc = Db4oClient.OMNConnection.Ext().GetByID(id) as ConnectionDetails;
+                    Db4oClient.OMNConnection.Ext().Activate(temprc, 5);
+                    MaintainCountofTwentyforQueries(temprc);
+                    MaintainCountofFiveForQueries(query, temprc);
+                    if (temprc != null)
+                    {
+                        temprc.Timestamp = DateTime.Now;
+                        temprc.QueryList.Add(query);
+                    }
+                    Db4oClient.OMNConnection.Ext().Store(temprc, 5);
+                    Db4oClient.OMNConnection.Commit();
+                }
+
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.HandleException(oEx);
+            }
             finally
-			{
+            {
                 Db4oClient.CloseRecentConnectionFile();
-			}
+            }
         }
 
         private void MaintainCountofFiveForQueries(OMQuery query, ConnectionDetails connection)

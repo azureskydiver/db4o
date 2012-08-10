@@ -16,7 +16,7 @@ namespace OManager.BusinessLayer.UIHelper
     {
         public static ConnParams GetCurrentConnParams()
         {
-            return Db4oClient.CurrentConnParams;
+            return Db4oClient.CurrentConnParams; 
         }
         public static ConnectionDetails GetRefreshedCurrentRecentConnection()
         {

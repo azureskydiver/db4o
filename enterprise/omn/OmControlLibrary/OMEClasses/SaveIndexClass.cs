@@ -38,8 +38,6 @@ namespace OMControlLibrary
 		internal void SaveIndex(string path)
 		{
 			dbInteraction.SetIndexedConfiguration(fieldnames, classname, indexed, path,CustomConfig);
-
-
 		}
 	}
 }

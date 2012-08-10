@@ -840,5 +840,4 @@ namespace OME.AdvancedDataGridView
 
         }
     }
-
 }

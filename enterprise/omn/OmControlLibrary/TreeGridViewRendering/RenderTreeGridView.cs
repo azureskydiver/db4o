@@ -27,9 +27,8 @@ namespace OMControlLibrary.TreeGridViewRendering
 			PopulateNode(rootNode, item);
 			rootNode.Expand();
 			rootNode.ImageIndex = 0;
-			List<ProxyTreeGridRenderer> proxyList = AssemblyInspectorObject.DataPopulation.TransverseTreeGridViewDetails(readOnly,id,
-			                                                                                                                classname);
-			foreach (ProxyTreeGridRenderer item1 in proxyList)
+			List<ProxyTreeGridRenderer> proxyList = AssemblyInspectorObject.DataPopulation.TransverseTreeGridViewDetails(readOnly,id,classname);
+            foreach (ProxyTreeGridRenderer item1 in proxyList)
 			{
 				PopulateTreeGridNode(rootNode, item1);
 			}

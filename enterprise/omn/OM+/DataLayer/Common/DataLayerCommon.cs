@@ -14,7 +14,6 @@ namespace OManager.DataLayer.CommonDatalayer
     {
         public static string Db4o_Version
         {
-
             get { return Db4oVersion.Name; }
         }
 

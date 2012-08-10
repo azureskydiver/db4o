@@ -190,8 +190,6 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-
-
 		#region Listing Helper Methods
 
 		public static string GetClassGUID(string className)

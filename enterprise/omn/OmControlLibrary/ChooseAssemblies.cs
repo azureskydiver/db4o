@@ -24,7 +24,6 @@ namespace OMControlLibrary
         {
             if (_searchPath == null || _searchPath.Paths.Count() <= 0)
                 return;
-
             foreach (string path in _searchPath.Paths)
             {
                 chkListBoxAssemblies.Items.Add(path, CheckState.Checked);

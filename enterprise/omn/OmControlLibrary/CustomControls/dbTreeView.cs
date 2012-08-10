@@ -1367,7 +1367,6 @@ namespace OMControlLibrary.Common
 			get { return m_tag; }
 			set { m_tag = value; }
 		}
-
 		public object Data
 		{
 			get { return m_data; }

@@ -21,8 +21,8 @@ namespace OManager.BusinessLayer.QueryRenderer
 		{
 			get { return readOnlyStatus; }
 			set { readOnlyStatus = value; }
-
 		}
+
 		public string DisplayFieldName
 		{
 			get { return displayFieldName;}

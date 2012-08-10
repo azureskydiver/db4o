@@ -66,7 +66,6 @@ namespace OMControlLibrary
 
 		private void LoadData()
 		{
-
 			masterView.Rows.Clear();
 			detailsTabs.Items.Clear();
 			detailsTabs.SelectedItem = null;

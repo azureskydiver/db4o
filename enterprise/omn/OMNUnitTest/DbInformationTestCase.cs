@@ -41,7 +41,6 @@ namespace OMNUnitTest
 				{
 					classesByAssembly[assemblyName] = new List<string>();
 				}
-
 				((List<string>)classesByAssembly[assemblyName]).Add(TypeReference.FromType(type).GetUnversionedName());
 			}
 

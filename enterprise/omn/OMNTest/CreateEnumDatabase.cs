@@ -8,7 +8,6 @@ namespace OMNTest
     class CreateEnumDatabase
     {
         static String FILE = "enum.db4o";
-
         public void Run()
         {
             File.Delete(FILE);

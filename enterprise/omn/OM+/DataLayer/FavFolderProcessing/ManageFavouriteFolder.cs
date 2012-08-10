@@ -47,7 +47,6 @@ namespace OManager.DataLayer.FavFolderProcessing
                     }
                     if (!check)
                         favList.lstFavFolder.Add(favFolder);
-
                 }
                 Db4oClient.OMNConnection.Store(favList);
                 Db4oClient.OMNConnection.Commit();

@@ -28,8 +28,7 @@ using Constants = OMControlLibrary.Common.Constants;
 
 namespace OMAddin
 {
-
-	public class Connect : IDTExtensibility2, IDTCommandTarget
+    public class Connect : IDTExtensibility2, IDTCommandTarget
 	{
 		#region Private Variables
 
@@ -200,6 +199,7 @@ namespace OMAddin
                         string toolbarName = Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION);
                         try
                         {
+                             
                             omToolbar = toolBarCommandBars.Add(toolbarName, MsoBarPosition.msoBarTop, Type.Missing, false);
                         }
                         catch (ArgumentException)

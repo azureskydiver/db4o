@@ -39,7 +39,6 @@ namespace OManager.DataLayer.Reflection
             {
                 _resolved[className] = new TypeImpl(klass, this);
             }
-
             return _resolved[className];
 
         }

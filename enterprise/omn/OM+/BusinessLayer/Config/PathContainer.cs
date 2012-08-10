@@ -1,5 +1,4 @@
 ﻿/* Copyright (C) 2009 Versant Inc.   http://www.db4o.com */
-
 using OManager.BusinessLayer.Login;
 
 namespace OManager.BusinessLayer.Config

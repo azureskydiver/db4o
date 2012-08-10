@@ -38,7 +38,6 @@ namespace OMNUnitTest
             Assert.IsTrue(Resolve(typeof(bool?)).IsEditable);
 			Assert.IsTrue(Resolve(typeof(EnumTest)).IsEditable);
 			Assert.IsTrue(Resolve(typeof(EnumTest?)).IsEditable);
-
 			Assert.IsFalse(Resolve(typeof(List<int>)).IsEditable);
 			Assert.IsFalse(Resolve(typeof(ReflectionTestCase)).IsEditable);
 			Assert.IsFalse(Resolve(typeof(object)).IsEditable);

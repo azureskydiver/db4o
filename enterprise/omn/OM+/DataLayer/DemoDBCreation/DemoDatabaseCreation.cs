@@ -144,7 +144,6 @@ namespace OManager.DataLayer.DemoDBCreation
             objContainer.Close();
             
             #endregion
-
 			RefreshConnectionData(filepath);
         }
 

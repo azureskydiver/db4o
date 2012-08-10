@@ -30,7 +30,6 @@ namespace OManager.DataLayer.Connection
 
         private static object EvaluateAssembly(Type customconfigType)
         {
-
             try
             {
                 foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())

@@ -21,9 +21,7 @@ namespace OManager.DataLayer.DataProcessing
                 string fieldName = attribute;
                 int intIndexof = fieldName.IndexOf('.') + 1;
                 fieldName = fieldName.Substring(intIndexof, fieldName.Length - intIndexof);
-
                 string[] splitstring = fieldName.Split('.');
-
                 object holdParentObject = Db4oClient.Client.Ext().GetByID(id);
                 Db4oClient.Client.Ext().Activate(holdParentObject, 2);
                 foreach (string str in splitstring)

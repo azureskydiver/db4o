@@ -79,7 +79,7 @@
 									  Source="@dir.omn.output@\Microsoft.Practices.ObjectBuilder.dll" 
 									  DiskId="1" Vital="yes" />
 							  
-								<!-- Visual Studio Interop Assemblies -->
+								<!-- Visual Studio Interop Assemblies  -->
 								<File Id="EnvDTE.id"
 									  Name="EnvDTE.dll"
 									  Source="@dir.omn.output@\EnvDTE.dll"

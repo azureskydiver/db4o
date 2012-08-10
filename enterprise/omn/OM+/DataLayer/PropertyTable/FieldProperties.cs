@@ -22,7 +22,6 @@ namespace OManager.DataLayer.PropertyTable
 		public FieldProperties(string fieldName, string fieldType)
 		{
 			m_fieldName = fieldName;
-
             m_type = Db4oClient.TypeResolver.Resolve(fieldType);
             m_dataType = m_type.DisplayName;
 		}

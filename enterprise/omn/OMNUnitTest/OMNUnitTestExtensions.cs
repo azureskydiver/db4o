@@ -25,7 +25,7 @@ namespace OMNUnitTest
 				Type claxx = excludedClasses[claxxIndex];
 				_excludedClasses.Add(claxx.FullName);
 			}
-		}
+        }
 
 		public override IReflectClass ForName(string className)
 		{
@@ -51,7 +51,7 @@ namespace OMNUnitTest
 		public static IType NewGenericType(this Type type)
 		{
 			string databaseFileName = Path.GetTempFileName();
-			StoreInstanceOf(databaseFileName, type);
+			StoreInstanceOf(databaseFileName, type); 
 
 			IEmbeddedConfiguration config2 = Db4oEmbedded.NewConfiguration();
 			config2.Common.ReflectWith(new ExcludingReflector(new[] { type }));

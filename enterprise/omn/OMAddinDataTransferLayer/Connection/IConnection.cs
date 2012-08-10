@@ -17,6 +17,6 @@ namespace OMAddinDataTransferLayer.Connection
 		bool DbConnectionStatus();
 	    bool CheckForClientServer();
 	    void SaveIndex(ArrayList fieldnames, string classname, ArrayList indexed, string path, bool customConfig);
-	    bool CheckForCustomConfig();
+	    bool CheckForCustomConfig(); 
 	}
 }

@@ -17,7 +17,6 @@ namespace OMControlLibrary.OMEAppDomain
         private ICustomConfigAssemblyInspector customConfigAssemblyInspector;
         public AppDomain workerAppDomain;
         private bool checkLocal;
-
         public CustomConfigAppDomain(bool checkLocal)
         {
             this.checkLocal = checkLocal;

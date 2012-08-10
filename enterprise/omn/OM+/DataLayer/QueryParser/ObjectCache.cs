@@ -18,8 +18,6 @@ namespace OManager.DataLayer.QueryParser
             {
                 objCache.Add(id, obj);
             }
-
-
         }
 
         public static void RemoveObject(long id)

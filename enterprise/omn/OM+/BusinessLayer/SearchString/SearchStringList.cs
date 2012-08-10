@@ -9,7 +9,6 @@ namespace OManager.BusinessLayer.SearchString
     public class SearchStringList
     {
          ConnParams m_connParam;
-
         public ConnParams ConnParam
         {
             get { return m_connParam; }

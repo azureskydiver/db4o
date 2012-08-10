@@ -22,7 +22,6 @@ namespace OManager.DataLayer.PropertyDetails
             string CorrectfieldName = fieldname;
             int intIndexof = CorrectfieldName.LastIndexOf('.') + 1;
             CorrectfieldName = CorrectfieldName.Substring(intIndexof, CorrectfieldName.Length - intIndexof);
-
             m_classname = DataLayerCommon.RemoveGFromClassName(classname);
             m_fieldname = CorrectfieldName;
             objectContainer = Db4oClient.Client; 
