@@ -41,6 +41,11 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 		_specificLibraries = specificLibraries;
 	}
 	
+	@Override
+	public Iterator4 iterator() {
+		return new DisposingIterator(super.iterator(), _environmentProvider);
+	}
+	
 	protected Iterator4 fromClass(Class clazz) throws Exception {
 		assertMigrationTestCase(clazz);
 		final Iterator4 defaultTestSuite = super.fromClass(clazz);
@@ -141,6 +146,35 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 		public Test transmogrify(Function4<Test, Test> fun) {
 			return fun.apply(this);
 		}
+	}
+	
+	private static class DisposingIterator implements Iterator4	{
 
+		private final Db4oLibraryEnvironmentProvider environmentProvider;
+		private final Iterator4 source;
+
+		public DisposingIterator(Iterator4 source, Db4oLibraryEnvironmentProvider environmentProvider) {
+			this.source = source;
+			this.environmentProvider = environmentProvider;
+		}
+
+		@Override
+		public boolean moveNext() {
+			boolean result = source.moveNext();
+			if (result == false && environmentProvider != null) {
+				environmentProvider.disposeAll();
+			}
+			return result;
+		}
+
+		@Override
+		public Object current() {
+			return source.current();
+		}
+
+		@Override
+		public void reset() {
+			throw new UnsupportedOperationException("Once finished, " + getClass().getName() + " cannot be reset.");
+		}		
 	}
 }
