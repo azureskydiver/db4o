@@ -13,13 +13,14 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 
         protected override Type[] TestCases()
         {
-            return new System.Type[]
+            return new[]
 		    {
                 typeof(DateTimeHandlerTestCase),
                 typeof(DecimalHandlerTestCase),
                 typeof(EnumInUntypedVariableTestCase),
                 typeof(EnumTypeHandlerTestCase),
 				typeof(GuidTypeHandlerTestCase),
+				typeof(GuidTypeHandler7_12_To_8_x_FieldIndexTestCase),
                 typeof(SByteHandlerTestCase),
                 typeof(UIntHandlerTestCase),
                 typeof(ULongHandlerTestCase),
