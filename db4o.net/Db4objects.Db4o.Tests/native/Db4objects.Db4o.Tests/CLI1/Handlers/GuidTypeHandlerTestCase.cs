@@ -13,11 +13,7 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 
 		protected override ValueTypeHolder[] ObjectsToOperateOn()
 		{
-			return new ValueTypeHolder[]
-			       	{
-			       		Objects[0],
-						Objects[1]
-					};
+			return new[] { Objects[0], Objects[1] };
 		}
 
 		protected override Guid UpdateValueFor(ValueTypeHolder holder)
@@ -31,7 +27,7 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 			return new Guid(126 + i, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)i);
 		}
 
-		private ValueTypeHolder[] Objects = new ValueTypeHolder[]
+		private ValueTypeHolder[] Objects = new[]
 			                            	{
 			                            		new ValueTypeHolder(NewGuidFor(1), new ValueTypeHolder(NewGuidFor(10))), 
 			                            		new ValueTypeHolder(NewGuidFor(2), new ValueTypeHolder(NewGuidFor(20))), 
