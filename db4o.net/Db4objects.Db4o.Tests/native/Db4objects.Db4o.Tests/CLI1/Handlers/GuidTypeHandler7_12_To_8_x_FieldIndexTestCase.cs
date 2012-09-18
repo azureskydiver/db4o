@@ -20,6 +20,10 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 		public void SetUp()
 		{
 			db4oFilePath = Path.GetTempFileName();
+			if (environmentProvider == null)
+			{
+				environmentProvider = new Db4oLibraryEnvironmentProvider(PathProvider.TestCasePath());
+			}
 		}
 
 		public void TearDown()
@@ -27,7 +31,8 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 			testsFinished++;
 			if (testsFinished == testMethodCount)
 			{
-				library.environment.Dispose();	
+				environmentProvider.DisposeAll();
+				testsFinished = 0;
 			}
 
 			if (db4oFilePath != null)
@@ -38,7 +43,7 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 
 		public void TestDefragWorksAfterReopening()
 		{
-			Library().environment.InvokeInstanceMethod(GetType(), "CreateDatabase", db4oFilePath, true);
+			Environment().InvokeInstanceMethod(GetType(), "CreateDatabase", db4oFilePath, true);
 
 			using(var db = Db4oEmbedded.OpenFile(db4oFilePath))
 			{
@@ -49,10 +54,20 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 			Defragment.Defragment.Defrag(config);
 		}
 
+		private Db4oLibraryEnvironment Environment()
+		{
+			if (environment == null)
+			{
+				var envPath = Path.Combine(Db4oLibrarian.LibraryPath(), "7.1\\" + typeof(Db4oEmbedded).Assembly.GetName().Name + ".dll");
+				environment = environmentProvider.EnvironmentFor(envPath);
+			}
+			return environment;
+		}
+
 		public void TestStoreWorksAfterReopening()
 		{
 			db4oFilePath = Path.GetTempFileName();
-			Library().environment.InvokeInstanceMethod(GetType(), "CreateDatabase", db4oFilePath, true);
+			Environment().InvokeInstanceMethod(GetType(), "CreateDatabase", db4oFilePath, true);
 
 			using (var db = Db4oEmbedded.OpenFile(db4oFilePath))
 			{
@@ -77,15 +92,6 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 			}
 		}
 
-		private Db4oLibrary Library()
-		{
-			return library ?? (library = Librarian().ForVersion("7.1"));
-		}
-
-		private Db4oLibrarian Librarian()
-		{
-			return new Db4oLibrarian(new Db4oLibraryEnvironmentProvider(PathProvider.TestCasePath()));
-		}
 
 		static GuidTypeHandler7_12_To_8_x_FieldIndexTestCase()
 		{
@@ -98,7 +104,8 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 		}
 
 		private string db4oFilePath;
-		private static Db4oLibrary library;
+		private static Db4oLibraryEnvironmentProvider environmentProvider;
+		private static Db4oLibraryEnvironment environment;
 		private static int testMethodCount;
 		private static int testsFinished;
 #else

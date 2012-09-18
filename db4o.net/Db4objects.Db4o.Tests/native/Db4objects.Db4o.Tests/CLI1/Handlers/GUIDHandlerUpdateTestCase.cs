@@ -32,11 +32,13 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 
 		protected override void ConfigureForTest(IConfiguration config)
 		{
+			base.ConfigureForTest(config);
 			config.ObjectClass(typeof(Item)).ObjectField("Typed").Indexed(IndexedOnCurrentVersion);
 		}
 
 		protected override void ConfigureForStore(IConfiguration config)
 		{
+			base.ConfigureForStore(config);
 			config.ObjectClass(typeof(Item)).ObjectField("Typed").Indexed(IndexedOnOldVersion);
 		}
 		
