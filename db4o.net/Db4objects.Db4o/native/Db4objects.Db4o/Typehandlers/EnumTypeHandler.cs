@@ -129,11 +129,6 @@ namespace Db4objects.Db4o.Typehandlers
             return clazz.GetID();
         }
 
-        private static ITypeHandler4 StringTypeHandler(IContext context)
-        {
-            return Container(context).Handlers.TypeHandlerForClass(Container(context).Ext().Reflector().ForClass(typeof(string)));
-        }
-
         private static ObjectContainerBase Container(IContext context)
         {
             return ((IInternalObjectContainer)context.ObjectContainer()).Container;
