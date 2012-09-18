@@ -36,64 +36,6 @@
     
   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <SignAssembly>true</SignAssembly>
 <AssemblyOriginatorKeyFile>../db4objects.snk</AssemblyOriginatorKeyFile>
 </PropertyGroup>
@@ -518,7 +460,7 @@
 <Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\CommonConversions.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\DropDateTimeOffsetClassIndexes_7_12.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\DropEnumClassIndexes_7_10.cs"/>
-<Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\DropGuidClassIndexes_7_12.cs"/>
+<Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\DropGuidClassAndFieldIndexes_7_12.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\FieldIndexesToBTrees_5_7.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\ReindexNetDateTime_7_8.cs"/>
 <Compile Include="Db4objects.Db4o\Internal\Convert\Conversions\VersionNumberToCommitTimestamp_8_0.cs"/>
@@ -1017,7 +959,7 @@
 <Compile Include="native\Db4objects.Db4o\Internal\Convert\Conversions\DropClassIndexesConversion.cs"/>
 <Compile Include="native\Db4objects.Db4o\Internal\Convert\Conversions\DropDateTimeOffsetClassIndexes_7_12.cs"/>
 <Compile Include="native\Db4objects.Db4o\Internal\Convert\Conversions\DropEnumClassIndexes_7_10.cs"/>
-<Compile Include="native\Db4objects.Db4o\Internal\Convert\Conversions\DropGuidClassIndexes_7_12.cs"/>
+<Compile Include="native\Db4objects.Db4o\Internal\Convert\Conversions\DropGuidClassAndFieldIndexes_7_12.cs"/>
 <Compile Include="native\Db4objects.Db4o\Internal\Convert\Conversions\ReindexNetDateTime_7_8.cs"/>
 <Compile Include="native\Db4objects.Db4o\Internal\Encoding\UTF8StringEncoding.cs"/>
 <Compile Include="native\Db4objects.Db4o\Internal\GenericTypeHandlerPredicate.cs"/>
