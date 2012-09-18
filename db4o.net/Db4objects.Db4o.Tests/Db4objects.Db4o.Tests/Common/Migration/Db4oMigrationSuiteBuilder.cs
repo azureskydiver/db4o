@@ -42,6 +42,12 @@ namespace Db4objects.Db4o.Tests.Common.Migration
 			_specificLibraries = specificLibraries;
 		}
 
+		public override IEnumerator GetEnumerator()
+		{
+			return new Db4oMigrationSuiteBuilder.DisposingIterator(base.GetEnumerator(), _environmentProvider
+				);
+		}
+
 		/// <exception cref="System.Exception"></exception>
 		protected override IEnumerator FromClass(Type clazz)
 		{
@@ -54,12 +60,12 @@ namespace Db4objects.Db4o.Tests.Common.Migration
 		/// <exception cref="System.Exception"></exception>
 		private IEnumerator MigrationTestSuite(Type clazz, Db4oLibrary[] libraries)
 		{
-			return Iterators.Map(libraries, new _IFunction4_51(this, clazz));
+			return Iterators.Map(libraries, new _IFunction4_55(this, clazz));
 		}
 
-		private sealed class _IFunction4_51 : IFunction4
+		private sealed class _IFunction4_55 : IFunction4
 		{
-			public _IFunction4_51(Db4oMigrationSuiteBuilder _enclosing, Type clazz)
+			public _IFunction4_55(Db4oMigrationSuiteBuilder _enclosing, Type clazz)
 			{
 				this._enclosing = _enclosing;
 				this.clazz = clazz;
@@ -194,6 +200,44 @@ namespace Db4objects.Db4o.Tests.Common.Migration
 			public ITest Transmogrify(IFunction4 fun)
 			{
 				return ((ITest)fun.Apply(this));
+			}
+		}
+
+		private class DisposingIterator : IEnumerator
+		{
+			private readonly Db4oLibraryEnvironmentProvider environmentProvider;
+
+			private readonly IEnumerator source;
+
+			public DisposingIterator(IEnumerator source, Db4oLibraryEnvironmentProvider environmentProvider
+				)
+			{
+				this.source = source;
+				this.environmentProvider = environmentProvider;
+			}
+
+			public virtual bool MoveNext()
+			{
+				bool result = source.MoveNext();
+				if (result == false && environmentProvider != null)
+				{
+					environmentProvider.DisposeAll();
+				}
+				return result;
+			}
+
+			public virtual object Current
+			{
+				get
+				{
+					return source.Current;
+				}
+			}
+
+			public virtual void Reset()
+			{
+				throw new NotSupportedException("Once finished, " + GetType().FullName + " cannot be reset."
+					);
 			}
 		}
 	}
