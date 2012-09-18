@@ -3,6 +3,7 @@
 /* Copyright (C) 2009 Judah Himango */
 
 using System;
+using System.Diagnostics;
 using Db4objects.Db4o.Internal;
 using Db4objects.Db4o.Internal.Marshall;
 using Db4objects.Db4o.native.Db4objects.Db4o.Typehandlers;
@@ -82,12 +83,17 @@ namespace Db4objects.Db4o.Typehandlers
 
     	public object ReadIndexEntry(IContext context, ByteArrayBuffer reader)
     	{
-    		return ReadFrom(reader);
+			return ReadFrom(reader);
     	}
 
     	public void WriteIndexEntry(IContext context, ByteArrayBuffer writer, object obj)
     	{
-			WriteGuid(obj, writer);
+			if (obj is int)
+			{
+				obj = context.ObjectContainer().Ext().GetByID((int) obj);
+				context.ObjectContainer().Activate(obj, 1);
+			}
+    		WriteGuid(obj, writer);
     	}
 
     	public void DefragIndexEntry(DefragmentContextImpl context)

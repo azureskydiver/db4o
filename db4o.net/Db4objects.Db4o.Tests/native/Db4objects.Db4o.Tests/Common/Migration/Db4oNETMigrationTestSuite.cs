@@ -1,6 +1,6 @@
 /* Copyright (C) 2009  Versant Inc.  http://www.db4o.com */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Db4objects.Db4o.Tests.CLI1.Handlers;
 using System.IO;
 using Db4objects.Db4o.Tests.Util;
@@ -30,10 +30,10 @@ namespace Db4objects.Db4o.Tests.Common.Migration
                 return new Type[] { };
             }
 
-            ArrayList list = new ArrayList();
+            var list = new List<Type>();
             list.AddRange(base.TestCases());
 
-            Type[] netTypes = new Type[] {
+            var netTypes = new[] {
                 typeof(SimplestPossibleHandlerUpdateTestCase),
                 typeof(GenericListVersionUpdateTestCase),
                 typeof(GenericDictionaryVersionUpdateTestCase),
@@ -43,6 +43,9 @@ namespace Db4objects.Db4o.Tests.Common.Migration
                 typeof(DecimalHandlerUpdateTestCase),
 				typeof(EnumHandlerUpdateTestCase),
                 typeof(GUIDHandlerUpdateTestCase),
+                typeof(GUIDHandlerUpdateIndexedOnCurrentVersionTestCase),
+                typeof(GUIDHandlerUpdateIndexedOnPreviousVersionsTestCase),
+                typeof(GUIDHandlerUpdateIndexedOnPreviousButNotOnCurrentVersionTestCase),
                 typeof(HashtableUpdateTestCase),
                 typeof(NestedStructHandlerUpdateTestCase),
                 typeof(SByteHandlerUpdateTestCase),
@@ -54,7 +57,7 @@ namespace Db4objects.Db4o.Tests.Common.Migration
             };
 
             list.AddRange(netTypes);
-        	return (Type[]) list.ToArray(typeof(Type));
+    		return list.ToArray();
         }
     }
 #endif
