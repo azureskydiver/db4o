@@ -70,5 +70,10 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
             return "enum";
         }
 
+		protected override void ConfigureForTest(Config.IConfiguration config)
+		{
+			config.ObjectClass(typeof(Item)).ObjectField("_asInteger").Indexed(true);
+		}
+
     }
 }

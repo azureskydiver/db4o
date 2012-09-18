@@ -112,7 +112,7 @@ namespace Db4objects.Db4o.Tests.CLI1.Handlers
 			return true;
 		}
 
-		class Item
+		protected class Item
 		{
 			public readonly T Typed;
 			public readonly Object Untyped;
