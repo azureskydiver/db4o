@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Db4objects.Db4o.Foundation.IO;
-using Db4objects.Db4o.Internal;
 using Db4objects.Db4o.Tests.Util;
 
 namespace Db4objects.Db4o.Tests.Common.Migration
