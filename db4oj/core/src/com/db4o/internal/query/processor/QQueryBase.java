@@ -817,9 +817,15 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 	
 	private void sort(QueryResult result) {
 		if (_orderings != null) {
+			if(result.size() == 0){
+				return;
+			}
 			result.sortIds(newSodaQueryComparator());
 		}
         if(_comparator!=null) {
+			if(result.size() == 0){
+				return;
+			}
         	result.sort(_comparator);
         }
 	}
