@@ -14,7 +14,7 @@ import db4ounit.extensions.*;
 public class OrderedQueryTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new OrderedQueryTestCase().runSolo();
+		new OrderedQueryTestCase().runAll();
 	}
 	
 	public static final class Item {
@@ -22,6 +22,20 @@ public class OrderedQueryTestCase extends AbstractDb4oTestCase {
 		
 		public Item(int value) {
 			this.value = value;
+		}
+		
+		@Override
+		public String toString() {
+			return "Item(" + value + ")";
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (! (obj instanceof Item))
+				return false;
+			
+			Item other = (Item) obj; 
+			return value == other.value;
 		}
 	}
 	
@@ -49,6 +63,20 @@ public class OrderedQueryTestCase extends AbstractDb4oTestCase {
 		final Query query = newQuery(Item.class);
 		query.descend("value").orderDescending();
 		assertQuery(new int[] { 3, 2, 1 }, query.execute());
+	}
+	
+	//COR-2309
+	public void _testOrderOnNonCommitedObjects() {
+		Query changeQuery = newQuery(Item.class);
+		changeQuery.descend("value").constrain(2);
+		ObjectSet<Item> result = changeQuery.execute(); 
+		Item item = result.get(0);
+		item.value = 42;		
+		store(item);
+		
+		final Query query = newQuery();
+		query.descend("value").orderDescending();		
+		IteratorAssert.areEqual(new Item[] { new Item(42), new Item(3), new Item(1) }, query.<Item>execute().iterator());
 	}
 
 	public void _testCOR1212() {
