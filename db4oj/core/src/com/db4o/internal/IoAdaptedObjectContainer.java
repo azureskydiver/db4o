@@ -74,7 +74,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 
     public void backup(final Storage targetStorage, final String path) throws DatabaseClosedException, Db4oIOException {
         withEnvironment(new Runnable() { public void run() {
-        	
 	    	synchronized (_lock) {
 				checkClosed();
 				if (_backupFile != null) {
@@ -88,7 +87,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 				synchronized (_lock) {
 					
 					int read = _file.read(pos, buffer);
-					if (read <= 0) {
+					if (read < 0) {
 						break;
 					}
 					_backupFile.write(pos, buffer, read);
@@ -112,7 +111,24 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 	        
         }});
     }
-    
+
+    public void backupSync(final Storage targetStorage, final String path) throws DatabaseClosedException, Db4oIOException {
+        withEnvironment(new Runnable() { public void run() {
+	    	synchronized (_lock) {
+				checkClosed();
+				BlockAwareBin backupFile = new BlockAwareBin(targetStorage.open(new BinConfiguration(path, true,_file.length(), false, _blockConverter.blocksToBytes(1))));
+		        long pos = 0;
+		        byte[] buffer = new byte[8192];
+		        int read = 0;
+		        while ((read = _file.read(pos, buffer)) >= 0) {
+					backupFile.write(pos, buffer, read);
+					pos += read;
+		        }
+		        syncAndClose(backupFile);
+			}
+        }});
+    }
+   
     public void blockSize(int size){
     	createBlockConverter(size);
     	_file.blockSize(size);

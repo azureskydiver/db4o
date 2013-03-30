@@ -53,6 +53,11 @@ public interface ExtObjectContainer extends ObjectContainer {
      * used. Changes that are made while the backup is in progress, will be applied to
      * the open ObjectContainer and to the backup.<br><br>
      * While the backup is running, the ObjectContainer should not be closed.<br><br>
+     * Note that this is designed to run as a background process: To avoid harming
+     * performance of concurrently active database operations, it tries to leave room
+     * for other threads as much as possible and thus will be orders of magnitude slower
+     * than a regular file copy. If you are looking for a faster backup (that will block
+     * all other database operations), use {@link #backupSync(Storage, String)} instead.<br/><br/>
      * If a file already exists at the specified path, it will be overwritten.<br><br>
      * The {@link Storage} used for backup is the one configured for this container.
      * @param path a fully qualified path
@@ -71,6 +76,11 @@ public interface ExtObjectContainer extends ObjectContainer {
      * used. Changes that are made while the backup is in progress, will be applied to
      * the open ObjectContainer and to the backup.<br><br>
      * While the backup is running, the ObjectContainer should not be closed.<br><br>
+     * Note that this is designed to run as a background process: To avoid harming
+     * performance of concurrently active database operations, it tries to leave room
+     * for other threads as much as possible and thus will be orders of magnitude slower
+     * than a regular file copy. If you are looking for a faster backup (that will block
+     * all other database operations), use {@link #backupSync(Storage, String)} instead.<br/><br/>
      * If a file already exists at the specified path, it will be overwritten.<br><br>
      * This method is intended for cross-storage backups, i.e. backup from an in-memory
      * database to a file.
@@ -83,6 +93,43 @@ public interface ExtObjectContainer extends ObjectContainer {
      */
     public void backup(Storage targetStorage, String path) throws Db4oIOException,
 			DatabaseClosedException, NotSupportedException;
+    
+    /**
+     * backs up a database file of an open ObjectContainer.
+     * While the backup is running, the ObjectContainer should not be closed.<br><br>
+     * Note that this blocks all other concurrently active database operations for the full
+     * duration of the backup. If you intend to run a backup as a less intrusive background
+     * process concurrently with other database operations, use {@link #backup(Storage, String)}
+     * instead.<br/><br/>
+     * If a file already exists at the specified path, it will be overwritten.<br><br>
+     * The {@link Storage} used for backup is the one configured for this container.
+     * @param targetStorage the {@link Storage} to be used for backup
+     * @param path a fully qualified path
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws NotSupportedException is thrown when the operation is not supported in current 
+     * configuration/environment
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     */
+    void backupSync(final String path) throws DatabaseClosedException, Db4oIOException;
+    
+    /**
+     * backs up a database file of an open ObjectContainer.
+     * While the backup is running, the ObjectContainer should not be closed.<br><br>
+     * Note that this blocks all other concurrently active database operations for the full
+     * duration of the backup. If you intend to run a backup as a less intrusive background
+     * process concurrently with other database operations, use {@link #backup(Storage, String)}
+     * instead.<br/><br/>
+     * If a file already exists at the specified path, it will be overwritten.<br><br>
+     * This method can be used for cross-storage backups, i.e. backup from an in-memory
+     * database to a file.
+     * @param targetStorage the {@link Storage} to be used for backup
+     * @param path a fully qualified path
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws NotSupportedException is thrown when the operation is not supported in current 
+     * configuration/environment
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     */
+    void backupSync(final Storage targetStorage, final String path) throws DatabaseClosedException, Db4oIOException;
     
     /**
      * binds an object to an internal object ID.

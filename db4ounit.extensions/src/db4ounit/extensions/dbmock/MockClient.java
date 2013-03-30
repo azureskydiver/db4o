@@ -37,6 +37,14 @@ public class MockClient implements ExtClient {
 		throw new NotImplementedException();
 	}
 
+	public void backupSync(String path) throws Db4oIOException, DatabaseClosedException, NotSupportedException {
+		throw new NotImplementedException();
+	}
+	
+	public void backupSync(Storage targetStorage, String path) throws Db4oIOException, DatabaseClosedException, NotSupportedException {
+		throw new NotImplementedException();
+	}
+	
 	public void backup(Storage targetStorage, String path) throws Db4oIOException, DatabaseClosedException, NotSupportedException {
 		throw new NotImplementedException();
 	}

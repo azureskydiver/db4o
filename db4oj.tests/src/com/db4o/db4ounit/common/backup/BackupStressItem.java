@@ -9,15 +9,9 @@ public class BackupStressItem {
     
     public int _iteration;
     
-    
-    public BackupStressItem() {
-        
-    }
-
     public BackupStressItem(String name, int iteration) {
         _name = name;
         _iteration = iteration;
     }
     
-
 }

@@ -55,6 +55,14 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
     	throw new NotSupportedException();
     }
 
+    public void backupSync(String path) throws Db4oIOException, DatabaseClosedException, NotSupportedException {
+    	throw new NotSupportedException();
+	}
+    
+    public void backupSync(Storage storage, String path) throws Db4oIOException, DatabaseClosedException, NotSupportedException {
+    	throw new NotSupportedException();
+	}
+    
     public void bind(Object obj, long id) throws InvalidIDException, DatabaseClosedException {
         _server.bind(_transaction, obj, id);
     }
