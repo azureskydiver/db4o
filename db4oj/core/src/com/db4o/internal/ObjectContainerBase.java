@@ -233,6 +233,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	backup(configImpl().storage(), path);
     }
 
+	public void backupSync(String path) throws DatabaseClosedException, Db4oIOException {
+    	backupSync(configImpl().storage(), path);
+    }
+	
 	public ActivationContext4 activationContextFor(Transaction ta,
 			final Object obj, final ActivationDepth depth) {
 		return new ActivationContext4(ta, obj, depth);

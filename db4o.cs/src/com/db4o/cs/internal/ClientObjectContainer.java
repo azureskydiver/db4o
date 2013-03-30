@@ -178,6 +178,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		throw new NotSupportedException();
 	}
 	
+	public void backupSync(Storage targetStorage, String path) throws NotSupportedException {
+		throw new NotSupportedException();
+	}
+	
 	public void closeTransaction(Transaction transaction, boolean isSystemTransaction, boolean rollbackOnClose) {
 		if(isSystemTransaction){
 			return;

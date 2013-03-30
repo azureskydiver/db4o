@@ -4,11 +4,11 @@ package com.db4o.db4ounit.common.backup;
 
 import com.db4o.*;
 
-public class BackupStressTestCase extends BackupStressTestCaseBase  {
+public class BackupSyncStressTestCase extends BackupStressTestCaseBase  {
     
 	@Override
 	protected void backup(ObjectContainer db, String fileName) {
-		db.ext().backup(fileName);
+		db.ext().backupSync(fileName);
 	}
 
 }

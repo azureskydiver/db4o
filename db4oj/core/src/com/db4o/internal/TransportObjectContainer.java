@@ -259,6 +259,12 @@ public class TransportObjectContainer extends LocalObjectContainer {
 			}
 
 	@Override
+	public void backupSync(Storage targetStorage, String path)
+			throws NotSupportedException {
+			    throw new NotSupportedException();
+			}
+	
+	@Override
 	public void blockSize(int size) {
 	    // do nothing, blocksize is always 1
 	}

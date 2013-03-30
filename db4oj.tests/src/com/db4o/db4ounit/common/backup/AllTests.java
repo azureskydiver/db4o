@@ -23,6 +23,7 @@ public class AllTests extends ComposibleTestSuite {
 	protected Class[] composeWith() {
 		return new Class[] {
 						BackupStressTestCase.class,
+						BackupSyncStressTestCase.class
 				};
 	}
 }

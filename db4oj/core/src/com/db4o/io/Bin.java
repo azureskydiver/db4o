@@ -19,7 +19,8 @@ public interface Bin {
 	 * @param position the offset position to read at
 	 * @param bytes the byte array to read bytes into
 	 * @param bytesToRead the number of bytes to be read
-	 * @return
+	 * @return The number of bytes actually read (<= bytesToRead) or -1 if position already
+	 * points to/exceeds the end of the bin
 	 */
 	int read(long position, byte[] bytes, int bytesToRead);
 	
