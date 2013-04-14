@@ -30,7 +30,7 @@ public class IndentedWriter {
 
 	private static final int MAX_COLUMNS = 80;
 
-	String _lineSeparator = System.getProperty("line.separator");
+	String _lineSeparator = "\r\n"; //System.getProperty("line.separator");
 
 	String _indentString = "\t";
 
