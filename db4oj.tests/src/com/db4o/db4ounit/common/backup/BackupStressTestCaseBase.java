@@ -101,7 +101,6 @@ public abstract class BackupStressTestCaseBase extends Db4oTestWithTempFile  {
 				        }
 				    }
 				}, "BackupStressTestCase.startBackupThread");
-		thread.setPriority(Thread.MIN_PRIORITY);
 		thread.start();
 		return thread;
 	}
